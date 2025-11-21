@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using EasyButtons;
 using System;
+using WebSocketSharp;
 
 public class BounceRay : MonoBehaviour
 {
+    public LineRenderer lineRenderer;
     public GameObject hitEffect;
     public GameObject hitSoundEffect;
     public GameObject hitSoundEffectPlayer;
@@ -21,7 +23,7 @@ public class BounceRay : MonoBehaviour
     {
         for(int i = 0; i < hit_count; i++)
         {
-            Gizmos.DrawLine(line_segment[i], line_segment[i+1]);
+            //Gizmos.DrawLine(line_segment[i], line_segment[i+1]);
         }
     }
 
@@ -56,6 +58,8 @@ public class BounceRay : MonoBehaviour
                     Instantiate(hitSoundMiss, line_segment[i], Quaternion.identity);
                 }
                 i++;
+                lineRenderer.SetPositions(line_segment);
+                lineRenderer.positionCount = i+1;
             }
             yield return null;
         }
@@ -74,8 +78,7 @@ public class BounceRay : MonoBehaviour
         distances[0] = 0.0f;
         hit_player = false;
 
-        for(int i = 0; i < ray_sequence.Length; i++)
-        {
+        for(int i = 0; i < ray_sequence.Length; i++) {
             Ray ray = ray_sequence[i];
             int num_hits = Physics.RaycastNonAlloc(ray,hits);
             Debug.Log($"Num Hits {num_hits}");
@@ -113,5 +116,9 @@ public class BounceRay : MonoBehaviour
                 break;
             }
         }
+
+        lineRenderer.SetPositions(line_segment);
+        lineRenderer.positionCount = 0;
+        //lineRenderer.widthCurve = new AnimationCurve(
     }
 }
