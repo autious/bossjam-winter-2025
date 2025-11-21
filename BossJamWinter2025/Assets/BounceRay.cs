@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EasyButtons;
+using System;
 
 public class BounceRay : MonoBehaviour
 {
+    public GameObject hitEffect;
+
     void Start()
     {
     }
@@ -15,6 +18,7 @@ public class BounceRay : MonoBehaviour
 
     int hit_count = 0;
     Vector3[] line_segment = new Vector3[65];
+    float[] distances = new float[64];
     Ray[] ray_sequence = new Ray[64];
 
     private void OnDrawGizmos()
@@ -26,6 +30,21 @@ public class BounceRay : MonoBehaviour
     }
 
     RaycastHit[] hits = new RaycastHit[8];
+
+    [Button("Shoot")]
+    public void Shoot()
+    {
+        Recalc();
+        StartCoroutine(ShootCoroutine());
+    }
+
+    public float bulletSpeed;
+
+    private IEnumerator ShootCoroutine()
+    {
+        float timeStart = Time.time;
+        yield return null;
+    }
 
     [Button("Recalc")]
     public void Recalc()
@@ -47,6 +66,7 @@ public class BounceRay : MonoBehaviour
 
                 ray_sequence[i+1] = new Ray(hit.point + out_vector * 0.01f, out_vector);
                 line_segment[i+1] = hit.point;
+                Instantiate(hitEffect, hit.point, Quaternion.identity);
             }
             else
             {
