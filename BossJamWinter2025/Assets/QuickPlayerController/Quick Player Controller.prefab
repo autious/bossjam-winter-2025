@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6839643051324722213}
   - component: {fileID: 6839643051324722212}
   - component: {fileID: 6839643051324722215}
+  - component: {fileID: 6936437555770847401}
   m_Layer: 3
   m_Name: Quick Player Controller
   m_TagString: Player
@@ -115,6 +116,25 @@ MonoBehaviour:
   coyoteTime: 0.2
   tiltAmount: 0.18
   tiltLerpSpeed: 9
+--- !u!114 &6936437555770847401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6839643051324722214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 816783704
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 6839643051324722215}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &6839643051927724530
 GameObject:
   m_ObjectHideFlags: 0
