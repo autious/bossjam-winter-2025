@@ -7,16 +7,12 @@ using System;
 public class BounceRay : MonoBehaviour
 {
     public GameObject hitEffect;
-
-    void Start()
-    {
-    }
-
-    void Update()
-    {
-    }
+    public GameObject hitSoundEffect;
+    public GameObject hitSoundEffectPlayer;
+    public GameObject hitSoundMiss;
 
     int hit_count = 0;
+    bool hit_player = true;
     Vector3[] line_segment = new Vector3[65];
     float[] distances = new float[64];
     Ray[] ray_sequence = new Ray[64];
@@ -43,22 +39,29 @@ public class BounceRay : MonoBehaviour
     private IEnumerator ShootCoroutine()
     {
         float timeStart = Time.time;
-        while(true) {
+        int i = 1;
+        while(i <= hit_count) {
             float dist = (Time.time - timeStart) * bulletSpeed;
-            for(int i = 0; i < hit_count; i++)
+            if(dist > distances[i])
             {
-                if(distances[i] <= dist && dist < distances[i+1])
-                {
+                if(i < hit_count) {
+                    Instantiate(hitEffect, line_segment[i], Quaternion.identity);
+                    Instantiate(hitSoundEffect, line_segment[i], Quaternion.identity);
+
                     float segmentDist = dist - distances[i];
-                    Vector3 dir = (line_segment[i+1] - line_segment[i]).normalized;
-                    Vector3 pos = line_segment[i] + dir * segmentDist;
-                    transform.position = pos;
-                    transform.rotation = Quaternion.LookRotation(dir);
-                    break;
+                    Vector3 pos = ray_sequence[i].origin + ray_sequence[i].direction * segmentDist;
+                } else if(hit_player) {
+                    Instantiate(hitSoundEffectPlayer, line_segment[i], Quaternion.identity);
+                } else {
+                    Instantiate(hitSoundMiss, line_segment[i], Quaternion.identity);
                 }
+                i++;
             }
             yield return null;
         }
+
+        if(hit_player)
+            Debug.Log("Hit Player!");
         //Instantiate(hitEffect, hit.point, Quaternion.identity);
     }
 
@@ -67,23 +70,41 @@ public class BounceRay : MonoBehaviour
     {
         ray_sequence[0] = new Ray(transform.position, transform.forward);
         line_segment[0] = transform.position;
+        hit_count = 0;
         distances[0] = 0.0f;
+        hit_player = false;
 
         for(int i = 0; i < ray_sequence.Length; i++)
         {
             Ray ray = ray_sequence[i];
             int num_hits = Physics.RaycastNonAlloc(ray,hits);
+            Debug.Log($"Num Hits {num_hits}");
 
-            if(num_hits > 0) {
+
+            if (num_hits > 0) {
                 RaycastHit hit = hits[0];
 
-                Debug.Log($"Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
+                //Get closest hit
+                for(int k = 1; k < num_hits; k++) {
+                    if(hits[k].distance < hit.distance) {
+                        hit = hits[k];
+                    }
+                }
 
-                Vector3 out_vector = Vector3.Reflect(ray.direction, hit.normal);
+                if(hit.collider.gameObject.layer == 0) {
+                    Debug.Log($"Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
 
-                distances[i+1] = distances[i] + hit.distance;
-                ray_sequence[i+1] = new Ray(hit.point + out_vector * 0.01f, out_vector);
-                line_segment[i+1] = hit.point;
+                    Vector3 out_vector = Vector3.Reflect(ray.direction, hit.normal);
+
+                    distances[i+1] = distances[i] + hit.distance;
+                    ray_sequence[i+1] = new Ray(hit.point + out_vector * 0.01f, out_vector);
+                    line_segment[i+1] = hit.point;
+                } else if(hit.collider.gameObject.layer == 10) {
+                    hit_count = i+1;
+                    line_segment[i+1] = ray.origin + ray.direction * hit.distance;
+                    hit_player = true;
+                    break;
+                }
             }
             else
             {
