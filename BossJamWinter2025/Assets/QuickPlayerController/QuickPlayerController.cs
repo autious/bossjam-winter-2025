@@ -40,10 +40,19 @@ public class QuickPlayerController : NetworkBehaviour
         bool _result = Physics.CheckSphere(transform.position + new Vector3(0, col.radius - 0.1f, 0), col.radius - 0.05f, collisionLayer);
         return _result;
     }
-    
-    
+
+    public override void Spawned()
+    {
+        cam.gameObject.SetActive(HasStateAuthority);
+    }
+
     void Update()
     {
+        if (!HasStateAuthority)
+        {
+            return;
+        }
+
         if (GroundCheck())
         {
             if (rb.velocity.y <= 0)
@@ -80,6 +89,11 @@ public class QuickPlayerController : NetworkBehaviour
     }
 
     void FixedUpdate(){
+        if (!HasStateAuthority)
+        {
+            return;
+        }
+
         rb.AddForce(Vector3.down * gravity);
 
         Vector3 motionCalc = -rb.velocity;
