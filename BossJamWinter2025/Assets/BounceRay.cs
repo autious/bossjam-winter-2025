@@ -43,7 +43,23 @@ public class BounceRay : MonoBehaviour
     private IEnumerator ShootCoroutine()
     {
         float timeStart = Time.time;
-        yield return null;
+        while(true) {
+            float dist = (Time.time - timeStart) * bulletSpeed;
+            for(int i = 0; i < hit_count; i++)
+            {
+                if(distances[i] <= dist && dist < distances[i+1])
+                {
+                    float segmentDist = dist - distances[i];
+                    Vector3 dir = (line_segment[i+1] - line_segment[i]).normalized;
+                    Vector3 pos = line_segment[i] + dir * segmentDist;
+                    transform.position = pos;
+                    transform.rotation = Quaternion.LookRotation(dir);
+                    break;
+                }
+            }
+            yield return null;
+        }
+        //Instantiate(hitEffect, hit.point, Quaternion.identity);
     }
 
     [Button("Recalc")]
@@ -51,6 +67,7 @@ public class BounceRay : MonoBehaviour
     {
         ray_sequence[0] = new Ray(transform.position, transform.forward);
         line_segment[0] = transform.position;
+        distances[0] = 0.0f;
 
         for(int i = 0; i < ray_sequence.Length; i++)
         {
@@ -64,9 +81,9 @@ public class BounceRay : MonoBehaviour
 
                 Vector3 out_vector = Vector3.Reflect(ray.direction, hit.normal);
 
+                distances[i+1] = distances[i] + hit.distance;
                 ray_sequence[i+1] = new Ray(hit.point + out_vector * 0.01f, out_vector);
                 line_segment[i+1] = hit.point;
-                Instantiate(hitEffect, hit.point, Quaternion.identity);
             }
             else
             {
