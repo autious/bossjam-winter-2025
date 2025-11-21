@@ -146,10 +146,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2429672803892427867}
-  - component: {fileID: 8791660984609632578}
-  - component: {fileID: 5443751185825015378}
-  - component: {fileID: 1501046918935048833}
+  - component: {fileID: 5942632170889302645}
   - component: {fileID: 4716380908776519151}
+  - component: {fileID: 8445977006755663709}
   m_Layer: 0
   m_Name: TempPlayer
   m_TagString: Untagged
@@ -174,7 +173,7 @@ Transform:
   - {fileID: 4503351199565563028}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8791660984609632578
+--- !u!114 &5942632170889302645
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -186,59 +185,14 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 4066297942
+  SortKey: 2125256163
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 786433
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 1501046918935048833}
   - {fileID: 4716380908776519151}
+  - {fileID: 8445977006755663709}
   ForceRemoteRenderTimeframe: 0
---- !u!143 &5443751185825015378
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2747793068376875988}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1501046918935048833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2747793068376875988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  gravity: -20
-  jumpImpulse: 8
-  acceleration: 10
-  braking: 10
-  maxSpeed: 2
-  rotationSpeed: 15
 --- !u!114 &4716380908776519151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,6 +205,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f19be7f9f25f0148a2c9aa8e6f4c881, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8445977006755663709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2747793068376875988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 1
 --- !u!1 &7043831994950195517
 GameObject:
   m_ObjectHideFlags: 0
