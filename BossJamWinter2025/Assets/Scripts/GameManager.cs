@@ -6,27 +6,29 @@ using Fusion.Sockets;
 using System;
 using UnityEngine.SceneManagement;
 
+#pragma warning disable UNT0006 // Incorrect message signature (Believe it is confusing Unity's own networking methods with Fusions')
+
 public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
-    public NetworkObject playerPrefab;
-    private Dictionary<PlayerRef, NetworkObject> playerInstances = new();
+    public static GameManager Instance { get; private set; }
 
     private NetworkRunner runner;
     private string roomIdentifier = "test_room";
+
+    public string[] gameplayScenePaths;
+
+    protected void Awake() {
+        Debug.Assert(Instance == null, "Trying to assign a second GameManager singleton instance!");
+        Instance = this;
+    }
 
     private async void StartGame() {
         runner = gameObject.AddComponent<NetworkRunner>();
         runner.ProvideInput = true;
 
-        var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
-        var sceneInfo = new NetworkSceneInfo();
-        if (scene.IsValid) {
-            sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
-        }
-
         await runner.StartGame(new StartGameArgs() {
             GameMode = GameMode.Shared,
             SessionName = roomIdentifier,
-            Scene = scene,
+            Scene = null,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
     }
@@ -39,6 +41,25 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
             }
             roomIdentifier = GUILayout.TextField(roomIdentifier);
             GUILayout.EndHorizontal();
+        }
+    }
+
+    public void NextMap() {
+        var sceneIndex = SceneUtility.GetBuildIndexByScenePath(gameplayScenePaths.GetRandom());
+        Debug.Assert(sceneIndex >= 0, "Failed getting scene from path, possibly forgot to add it to the build scene list");
+
+        runner.LoadScene(SceneRef.FromIndex(sceneIndex), LoadSceneMode.Single);
+    }
+
+    public void OnMapBootstrapLoaded(MapInstance mapBootstrap) {
+        if (runner == null) {
+            Debug.LogWarning("MapBootstrap loaded without an active NetworkRunner, the game will not run as expected");
+            return;
+        }
+
+        if (runner.IsSharedModeMasterClient) {
+            // Just start instantly for now
+            mapBootstrap.StartRound();
         }
     }
 
@@ -57,8 +78,9 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
-        if (player == runner.LocalPlayer) {
-            runner.Spawn(playerPrefab, Vector3.up, Quaternion.identity, player);
+        // If we are the master client, we need to initiate the game for everyone
+        if (runner.IsSharedModeMasterClient) {
+            NextMap();
         }
     }
 
