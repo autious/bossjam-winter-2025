@@ -6,45 +6,60 @@ using Fusion.Sockets;
 using System;
 using UnityEngine.SceneManagement;
 
+#pragma warning disable UNT0006 // Incorrect message signature (Believe it is confusing Unity's own networking methods with Fusions')
+
 public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
-    public NetworkObject playerPrefab;
-    private Dictionary<PlayerRef, NetworkObject> playerInstances = new();
+    public static GameManager Instance { get; private set; }
 
     private NetworkRunner runner;
     private string roomIdentifier = "test_room";
 
-    private async void StartGame(GameMode gameMode) {
+    public string[] gameplayScenePaths;
+
+    protected void Awake() {
+        Debug.Assert(Instance == null, "Trying to assign a second GameManager singleton instance!");
+        Instance = this;
+    }
+
+    private async void StartGame() {
         runner = gameObject.AddComponent<NetworkRunner>();
         runner.ProvideInput = true;
 
-        var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
-        var sceneInfo = new NetworkSceneInfo();
-        if (scene.IsValid) {
-            sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
-        }
-
         await runner.StartGame(new StartGameArgs() {
-            GameMode = gameMode,
+            GameMode = GameMode.Shared,
             SessionName = roomIdentifier,
-            Scene = scene,
+            Scene = null,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
     }
 
     protected void OnGUI() {
         if (runner == null) {
-            GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Host")) {
-                StartGame(GameMode.Host);
+            if (GUILayout.Button("Enter")) {
+                StartGame();
             }
             roomIdentifier = GUILayout.TextField(roomIdentifier);
             GUILayout.EndHorizontal();
+        }
+    }
 
-            if (GUILayout.Button("Join")) {
-                StartGame(GameMode.Client);
-            }
-            GUILayout.EndVertical();
+    public void NextMap() {
+        var sceneIndex = SceneUtility.GetBuildIndexByScenePath(gameplayScenePaths.GetRandom());
+        Debug.Assert(sceneIndex >= 0, "Failed getting scene from path, possibly forgot to add it to the build scene list");
+
+        runner.LoadScene(SceneRef.FromIndex(sceneIndex), LoadSceneMode.Single);
+    }
+
+    public void OnMapBootstrapLoaded(MapInstance mapBootstrap) {
+        if (runner == null) {
+            Debug.LogWarning("MapBootstrap loaded without an active NetworkRunner, the game will not run as expected");
+            return;
+        }
+
+        if (runner.IsSharedModeMasterClient) {
+            // Just start instantly for now
+            mapBootstrap.StartRound();
         }
     }
 
@@ -57,36 +72,19 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
-
-    public void OnInput(NetworkRunner runner, NetworkInput input) {
-        var data = new NetworkInputData();
-        if (Input.GetKey(KeyCode.W)) data.direction += Vector2.up;
-        if (Input.GetKey(KeyCode.S)) data.direction += Vector2.down;
-        if (Input.GetKey(KeyCode.A)) data.direction += Vector2.left;
-        if (Input.GetKey(KeyCode.D)) data.direction += Vector2.right;
-        input.Set(data);
-    }
-
+    public void OnInput(NetworkRunner runner, NetworkInput input) {}
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
-        if (runner.IsServer) {
-            var playerInstance = runner.Spawn(playerPrefab, Vector3.up, Quaternion.identity, player);
-
-            Debug.Assert(!playerInstances.ContainsKey(player), "Already create a player instance for this player ref");
-            playerInstances[player] = playerInstance;
+        // If we are the master client, we need to initiate the game for everyone
+        if (runner.IsSharedModeMasterClient) {
+            NextMap();
         }
     }
 
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
-        if (playerInstances.ContainsKey(player)) {
-            runner.Despawn(playerInstances[player]);
-            playerInstances.Remove(player);
-        }
-    }
-
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {}
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }
