@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using System.Linq;
 using UnityEngine.Rendering;
+using UnityEngine.Scripting;
 
 public enum GameState {
     PreGame,
@@ -17,6 +18,12 @@ public struct FeedEntry {
 }
 
 public class MapInstance : NetworkBehaviour {
+    [RuntimeInitializeOnLoadMethod]
+    [Preserve]
+    private static void Init() {
+        ActiveInstance = null;
+    }
+
     public static MapInstance ActiveInstance { get; private set; }
 
     [Networked] public GameState currentState { get; private set; } = GameState.PreGame;

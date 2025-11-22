@@ -5,12 +5,19 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting;
 
 using Random = UnityEngine.Random;
 
 #pragma warning disable UNT0006 // Incorrect message signature (Believe it is confusing Unity's own networking methods with Fusions')
 
 public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
+    [RuntimeInitializeOnLoadMethod]
+    [Preserve]
+    private static void Init() {
+        Instance = null;
+    }
+
     public static GameManager Instance { get; private set; }
 
     public NetworkRunner runner;
