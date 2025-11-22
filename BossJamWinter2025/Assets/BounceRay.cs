@@ -36,37 +36,58 @@ public class BounceRay : MonoBehaviour
         StartCoroutine(ShootCoroutine());
     }
 
-    public float bulletSpeed;
+    public float bulletSpeed = 100.0f;
+    public float trailingLength = 100.0f;
 
-    private IEnumerator ShootCoroutine()
-    {
-        float timeStart = Time.time;
-        int i = 1;
-        while(i <= hit_count) {
-            float dist = (Time.time - timeStart) * bulletSpeed;
-            if(dist > distances[i])
-            {
-                if(i < hit_count) {
-                    Instantiate(hitEffect, line_segment[i], Quaternion.identity);
-                    Instantiate(hitSoundEffect, line_segment[i], Quaternion.identity);
+    private IEnumerator ShootCoroutine() {
+        if(Application.isPlaying) {
+            float timeStart = Time.time;
+            int trailing_index = 0;
+            int bullet_index = 1;
+            while(trailing_index <= hit_count) {
+                float dist = (Time.time - timeStart) * bulletSpeed;
+                float trailing_dist = Mathf.Max(0.0f, dist - trailingLength);
 
-                    float segmentDist = dist - distances[i];
-                    Vector3 pos = ray_sequence[i].origin + ray_sequence[i].direction * segmentDist;
-                } else if(hit_player) {
-                    Instantiate(hitSoundEffectPlayer, line_segment[i], Quaternion.identity);
-                } else {
-                    Instantiate(hitSoundMiss, line_segment[i], Quaternion.identity);
+                if(trailing_dist > distances[trailing_index] && trailing_index <= hit_count)
+                {
+                    trailing_index++;
                 }
-                i++;
-                lineRenderer.SetPositions(line_segment);
-                lineRenderer.positionCount = i+1;
-            }
-            yield return null;
-        }
 
-        if(hit_player)
-            Debug.Log("Hit Player!");
+                float segment_trailing_dist = trailing_dist - (trailing_index > 0 ? distances[trailing_index-1] : 0);
+                Vector3 trailing_pos = ray_sequence[trailing_index].origin + ray_sequence[trailing_index].direction * segment_trailing_dist;
+
+                if (dist > distances[bullet_index] && bullet_index <= hit_count)
+                {
+                    if(bullet_index < hit_count) {
+                        Instantiate(hitEffect, line_segment[bullet_index], Quaternion.identity);
+                        Instantiate(hitSoundEffect, line_segment[bullet_index], Quaternion.identity);
+
+                        float segmentDist = dist - distances[bullet_index];
+                        Vector3 pos = ray_sequence[bullet_index].origin + ray_sequence[bullet_index].direction * segmentDist;
+                    } else if(hit_player) {
+                        Instantiate(hitSoundEffectPlayer, line_segment[bullet_index], Quaternion.identity);
+                    } else {
+                        Instantiate(hitSoundMiss, line_segment[bullet_index], Quaternion.identity);
+                    }
+                    bullet_index++;
+
+                }
+
+                int segment_count = Math.Min(bullet_index, Math.Max(0, bullet_index - trailing_index));
+                lineRenderer.positionCount = segment_count;
+                for(int k = 0; k < segment_count; k++) {
+                    int source_index = k + bullet_index - segment_count;
+                    lineRenderer.SetPosition(k, line_segment[source_index]);
+                }
+
+                yield return null;
+            }
+        }
         //Instantiate(hitEffect, hit.point, Quaternion.identity);
+    }
+
+    public void UpdateLines()
+    {
     }
 
     [Button("Recalc")]
@@ -104,6 +125,7 @@ public class BounceRay : MonoBehaviour
                     line_segment[i+1] = hit.point;
                 } else if(hit.collider.gameObject.layer == 10) {
                     hit_count = i+1;
+                    distances[i+1] = distances[i] + hit.distance;
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
                     hit_player = true;
                     break;
@@ -112,6 +134,7 @@ public class BounceRay : MonoBehaviour
             else
             {
                 hit_count = i+1;
+                distances[i+1] = distances[i] + 10.0f;
                 line_segment[i+1] = ray.origin + ray.direction * 100.0f;
                 break;
             }
