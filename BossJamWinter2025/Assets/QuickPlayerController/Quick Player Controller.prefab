@@ -5715,6 +5715,7 @@ MonoBehaviour:
     m_Bits: 1
   head: {fileID: 6839643051927724531}
   cam: {fileID: 2438677895657820909}
+  camThingy: {fileID: 6839643052924768986}
   airControl: 1
   moveSpeed: 100
   maxSpeed: 8

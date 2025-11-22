@@ -12,6 +12,7 @@ public class QuickPlayerController : NetworkBehaviour
 
     [SerializeField] Transform head;
     [SerializeField] Transform cam;
+    [SerializeField] GameObject camThingy;
 
     [Header("Motion Settings")]
     [SerializeField, Range(0, 1)] float airControl;
@@ -65,7 +66,7 @@ public class QuickPlayerController : NetworkBehaviour
     
     public override void Spawned()
     {
-        cam.gameObject.SetActive(HasStateAuthority);
+        camThingy.SetActive(HasStateAuthority);
         charModel.SetActive(HasStateAuthority == false);
     }
 
