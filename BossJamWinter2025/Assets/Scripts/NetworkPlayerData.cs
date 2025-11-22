@@ -18,12 +18,12 @@ public class NetworkPlayerData : NetworkBehaviour {
         base.Spawned();
 
         instances.Add(this);
-        if (MapInstance.ActiveInstance != null) {
-            MapInstance.ActiveInstance.feed.Enqueue(new FeedEntry() {
-                message = $"{playerName} joined!",
-                time = Time.unscaledTime,
-            });
-        }
+
+        Debug.Assert(GameManager.Instance != null, "GameManager instance was null when we spawned a NetworkPlayerData instance");
+        GameManager.Instance.feed.Enqueue(new FeedEntry() {
+            message = $"{playerName} joined!",
+            time = Time.unscaledTime,
+        });
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState) {

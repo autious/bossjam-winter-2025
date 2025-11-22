@@ -12,11 +12,6 @@ public enum GameState {
     PostGame,
 }
 
-public struct FeedEntry {
-    public string message;
-    public float time;
-}
-
 public class MapInstance : NetworkBehaviour {
     [Preserve]
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
@@ -32,16 +27,7 @@ public class MapInstance : NetworkBehaviour {
     [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
     [Networked] private int killGoal { get; set; } = 5;
 
-    public Queue<FeedEntry> feed = new();
-
     public NetworkObject playerPrefab;
-
-    protected void Update() {
-        // Remove items from the feed
-        while (feed.TryPeek(out var entry) && entry.time + 5 < Time.unscaledTime) {
-            feed.Dequeue();
-        }
-    }
 
     public override void Spawned() {
         base.Spawned();
@@ -133,7 +119,7 @@ public class MapInstance : NetworkBehaviour {
 
         // Add feed fluff
         var feedColor = isLocalPlayerInvolved ? "#ae0c01ff" : "#f3fcf3ff";
-        feed.Enqueue(new FeedEntry() {
+        GameManager.Instance.feed.Enqueue(new FeedEntry() {
             message = $"<color={feedColor}><b>{killer.playerName}</b> killed <b>{killee.playerName}</b></color>",
             time = Time.unscaledTime,
         });
