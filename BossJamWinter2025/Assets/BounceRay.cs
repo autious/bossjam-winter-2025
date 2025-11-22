@@ -32,7 +32,7 @@ public class BounceRay : MonoBehaviour
         shotLineRenderer.gameObject.SetActive(false);
         previewLineRenderer.gameObject.SetActive(false);
 
-        MAX_BOUNCE = Math.Max(shot_bounce_limit, laser_bounce_limit);
+        MAX_BOUNCE = Math.Max(shot_bounce_limit, laser_bounce_limit)+2;
 
         line_segment = new Vector3[MAX_BOUNCE+1];
         distances = new float[MAX_BOUNCE+1];
@@ -73,7 +73,7 @@ public class BounceRay : MonoBehaviour
         Recalc();
         shotLineRenderer.gameObject.SetActive(false);
         previewLineRenderer.gameObject.SetActive(true);
-        previewLineRenderer.positionCount = Math.Min(5,hit_count);
+        previewLineRenderer.positionCount = Math.Min(laser_bounce_limit + 2,hit_count);
         if(hit_count > 1) {
             previewLineRenderer.SetPosition(0, gunFirePoint);
             for(int i = 1; i < previewLineRenderer.positionCount; i++) {
@@ -88,6 +88,7 @@ public class BounceRay : MonoBehaviour
             float timeStart = Time.time;
             int trailing_index = 0;
             int bullet_index = 1;
+            hit_count = Math.Min(shot_bounce_limit, hit_count);
             while(trailing_index <= hit_count) {
                 float dist = (Time.time - timeStart) * bulletSpeed;
                 float trailing_dist = Mathf.Max(0.0f, dist - trailingLength);
@@ -183,6 +184,7 @@ public class BounceRay : MonoBehaviour
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
+                    ray_sequence[i+1] = new Ray(hit.point, Vector3.zero);
                     hit_player = true;
                     hitPlayer = hit.collider.gameObject.GetComponent<Hittable>();
                     break;
@@ -193,6 +195,7 @@ public class BounceRay : MonoBehaviour
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
+                    ray_sequence[i+1] = new Ray(hit.point, Vector3.zero);
                     break;
                 }
             }

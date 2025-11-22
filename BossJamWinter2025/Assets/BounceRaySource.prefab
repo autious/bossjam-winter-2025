@@ -58,8 +58,8 @@ MonoBehaviour:
     type: 3}
   bulletSpeed: 1000
   trailingLength: 1000
-  shot_bounce_limit: 3
-  laser_bounce_limit: 1
+  shot_bounce_limit: 2
+  laser_bounce_limit: 2
 --- !u!1 &2351560008068461979
 GameObject:
   m_ObjectHideFlags: 0
