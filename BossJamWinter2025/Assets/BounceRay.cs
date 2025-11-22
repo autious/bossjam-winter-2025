@@ -7,7 +7,8 @@ using WebSocketSharp;
 
 public class BounceRay : MonoBehaviour
 {
-    public LineRenderer lineRenderer;
+    public LineRenderer shotLineRenderer;
+    public LineRenderer previewLineRenderer;
     public GameObject hitEffect;
     public GameObject hitSoundEffect;
     public GameObject hitSoundEffectPlayer;
@@ -17,9 +18,15 @@ public class BounceRay : MonoBehaviour
 
     int hit_count = 0;
     bool hit_player = true;
+    int MAX_BOUNCE = 64;
     Vector3[] line_segment = new Vector3[65];
-    float[] distances = new float[64];
-    Ray[] ray_sequence = new Ray[64];
+    float[] distances = new float[65];
+    Ray[] ray_sequence = new Ray[65];
+
+    private void Awake() {
+        shotLineRenderer.gameObject.SetActive(false);
+        previewLineRenderer.gameObject.SetActive(false);
+    }
 
     private void OnDrawGizmos()
     {
@@ -36,10 +43,23 @@ public class BounceRay : MonoBehaviour
     {
         Shoot(false);
     }
+
     public void Shoot(bool cosmetic)
     {
+        shotLineRenderer.gameObject.SetActive(true);
+        previewLineRenderer.gameObject.SetActive(false);
         Recalc();
         StartCoroutine(ShootCoroutine(cosmetic));
+    }
+
+    public void Preview()
+    {
+        Recalc();
+        shotLineRenderer.gameObject.SetActive(false);
+        previewLineRenderer.gameObject.SetActive(true);
+        for(int i = 0; i < hit_count; i++) {
+            previewLineRenderer.SetPosition(i, line_segment[i]);
+        }
     }
 
     public float bulletSpeed = 100.0f;
@@ -80,10 +100,10 @@ public class BounceRay : MonoBehaviour
                 }
 
                 int segment_count = Math.Min(bullet_index, Math.Max(0, bullet_index - trailing_index));
-                lineRenderer.positionCount = segment_count;
+                shotLineRenderer.positionCount = segment_count;
                 for(int k = 0; k < segment_count; k++) {
                     int source_index = k + bullet_index - segment_count;
-                    lineRenderer.SetPosition(k, line_segment[source_index]);
+                    shotLineRenderer.SetPosition(k, line_segment[source_index]);
                 }
 
                 yield return null;
@@ -105,7 +125,7 @@ public class BounceRay : MonoBehaviour
         distances[0] = 0.0f;
         hit_player = false;
 
-        for(int i = 0; i < ray_sequence.Length; i++) {
+        for(int i = 0; i < MAX_BOUNCE; i++) {
             Ray ray = ray_sequence[i];
             int num_hits = Physics.RaycastNonAlloc(ray,hits);
             Debug.Log($"Num Hits {num_hits}");
@@ -146,8 +166,8 @@ public class BounceRay : MonoBehaviour
             }
         }
 
-        lineRenderer.SetPositions(line_segment);
-        lineRenderer.positionCount = 0;
+        shotLineRenderer.SetPositions(line_segment);
+        shotLineRenderer.positionCount = 0;
         //lineRenderer.widthCurve = new AnimationCurve(
     }
 }
