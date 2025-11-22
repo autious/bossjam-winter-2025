@@ -117,7 +117,6 @@ public class MapInstance : NetworkBehaviour {
     protected virtual void UpdateMidGame() {
         var killTargetReached = false;
         foreach ((PlayerRef player, int count) in kills) {
-            Debug.Log(count);
             if (count >= killGoal) {
                 killTargetReached = true;
                 break;
