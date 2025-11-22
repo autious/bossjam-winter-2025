@@ -48,6 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shotLineRenderer: {fileID: 8407320976212110657}
   previewLineRenderer: {fileID: 5924665088400112426}
+  fireEffect: {fileID: 7188998172200550153, guid: 2bed6e0a27c4acf488ba5468b665a874,
+    type: 3}
   hitEffect: {fileID: 4233211162973040339, guid: 03b78f3adfac61f418a3987b7ab43734,
     type: 3}
   hitSoundEffect: {fileID: 7188998172200550153, guid: 7169757d7e0550d4d950c6d0438892b2,

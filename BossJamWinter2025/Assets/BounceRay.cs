@@ -9,6 +9,7 @@ public class BounceRay : MonoBehaviour
 {
     public LineRenderer shotLineRenderer;
     public LineRenderer previewLineRenderer;
+    public GameObject fireEffect;
     public GameObject hitEffect;
     public GameObject hitSoundEffect;
     public GameObject hitSoundEffectPlayer;
@@ -85,6 +86,7 @@ public class BounceRay : MonoBehaviour
 
     private IEnumerator ShootCoroutine(bool cosmetic, bool  destroy_when_done) {
         if(Application.isPlaying) {
+            Instantiate(fireEffect, line_segment[0], Quaternion.identity);
             float timeStart = Time.time;
             int trailing_index = 0;
             int bullet_index = 1;

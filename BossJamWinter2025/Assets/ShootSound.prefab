@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4714640701065427813}
   - component: {fileID: 1640283429594471088}
   m_Layer: 0
-  m_Name: HitSound
+  m_Name: ShootSound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,11 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool:
-  - {fileID: 8300000, guid: 947fbf86f8176f64896264d888c425d5, type: 3}
-  - {fileID: 8300000, guid: 4aa93423b8cbe5843979b2484d92e2a9, type: 3}
-  - {fileID: 8300000, guid: c706a92ff4f5f254eba50f2dd1b258e8, type: 3}
-  - {fileID: 8300000, guid: 5b7c18a9299aae4429ecd69375ebdd1d, type: 3}
-  - {fileID: 8300000, guid: b0642255998291b4db33fc24f2952267, type: 3}
+  - {fileID: 8300000, guid: 9e242c71c76ad1745be8581316a41d35, type: 3}
+  - {fileID: 8300000, guid: 52debc5afe71f964d8c0437f4cfda252, type: 3}
+  - {fileID: 8300000, guid: 0f3373e594226964c97f024722650d72, type: 3}
+  - {fileID: 8300000, guid: 6cf1c67b11c78994192ed7ad79923e27, type: 3}
 --- !u!82 &1640283429594471088
 AudioSource:
   m_ObjectHideFlags: 0
