@@ -111,9 +111,9 @@ public class QuickPlayerController : NetworkBehaviour
         if (GameManager.Instance != null) {
             if (!HasStateAuthority) {
                 // Online player stuff
-                isGrounded = GroundCheck();
+                return;
                 my = Mathf.Clamp(cam.localEulerAngles.x, -89, 89);
-                Vector3 moveDir = transform.position - posLastFrame;
+                Vector3 moveDir = (transform.position - posLastFrame).normalized;
                 moveDir.y = 0;
                 float move = Vector3.Dot(head.forward, moveDir) >= 0 ? 1 : -1;
                 float strafe = Vector3.Dot(head.right, moveDir) >= 0 ? 1 : -1;
@@ -191,7 +191,12 @@ public class QuickPlayerController : NetworkBehaviour
         //     laser = null;
         // }
         charAnim.SetValues(0, 0, 0, true);
+        walk = moveY;
+        strafe = moveX;
     }
+
+    [Networked] [SerializeField] public float walk {get;set;}
+    [Networked] [SerializeField] public float strafe {get;set;}
 
 
     void FixedUpdate(){
