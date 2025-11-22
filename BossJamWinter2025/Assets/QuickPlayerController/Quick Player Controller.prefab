@@ -5606,6 +5606,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 6839643051324722215}
   - {fileID: 8850065667427851769}
+  - {fileID: 8457962913741600308}
   - {fileID: 8858752790860349707}
   - {fileID: 4881162416783127067}
   ForceRemoteRenderTimeframe: 0
@@ -6152,6 +6153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc39544883d6a6f41be2096a93c0c509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 6839643051324722215}
 --- !u!1 &8733679650984782406
 GameObject:
   m_ObjectHideFlags: 0
@@ -6384,7 +6386,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6876717465685232523, guid: 125a913ee0349534f8fcd2954fdc8fc7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5187586265064130257}
   m_SourcePrefab: {fileID: 100100000, guid: 125a913ee0349534f8fcd2954fdc8fc7, type: 3}
 --- !u!1 &497725415952791333 stripped
 GameObject:
@@ -6404,9 +6410,35 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 2716366115475798795}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8853367196310777984}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f36018a933dfe71448c755b7a5170c1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8853367196310777984 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6876717465685232523, guid: 125a913ee0349534f8fcd2954fdc8fc7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2716366115475798795}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1818360609 &5187586265064130257
+RotationConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8853367196310777984}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_AffectRotationX: 0
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 0
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 6839643051927724531}
+    weight: 1

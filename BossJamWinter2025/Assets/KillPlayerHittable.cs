@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class KillPlayerHittable : Hittable {
-    QuickPlayerController playerController;
+    public QuickPlayerController playerController;
+
+    protected void Awake() {
+        Debug.Assert(playerController != null, $"{nameof(QuickPlayerController)} was not assigned on KillPlayerHittable ({gameObject.name})");
+    }
+
     public override void OnHit(Vector3 hitPoint, Vector3 hitNormal, bool cosmetic) {
-        if(!cosmetic) {
+        if (!cosmetic) {
+            Debug.Log("Player was killed");
             playerController.KillPlayer();
         }
-        Debug.Log("Player was killed");
     }
 }

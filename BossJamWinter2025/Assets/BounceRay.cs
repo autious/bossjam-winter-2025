@@ -14,8 +14,6 @@ public class BounceRay : MonoBehaviour
     public GameObject hitSoundEffectPlayer;
     public GameObject hitSoundMiss;
 
-    public bool isCosmetic; // TODO hook up
-
     int hit_count = 0;
     bool hit_player = true;
     Hittable hitPlayer;
