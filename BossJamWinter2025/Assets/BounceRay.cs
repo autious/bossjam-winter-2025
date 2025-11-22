@@ -82,7 +82,9 @@ public class BounceRay : MonoBehaviour
                 }
 
                 Vector3 trailing_pos = line_segment[0];
-                if(trailing_index > 0) {
+                if(trailing_index >= hit_count) {
+                    trailing_pos = line_segment[hit_count];
+                } else if(trailing_index > 0) {
                     float segment_trailing_dist = trailing_dist - distances[trailing_index-1];
                     trailing_pos = ray_sequence[trailing_index-1].origin + ray_sequence[trailing_index-1].direction * segment_trailing_dist;
                 }
@@ -91,7 +93,7 @@ public class BounceRay : MonoBehaviour
                 //Ensure bullet doesn't go beyond player.
                 if(!hit_player || bullet_index <= hit_count) {
                     float segmentDist = dist - distances[bullet_index-1];
-                    bullet_pos = ray_sequence[bullet_index-1].origin + ray_sequence[bullet_index - 1].direction * segmentDist;
+                    bullet_pos = ray_sequence[bullet_index - 1].origin + ray_sequence[bullet_index - 1].direction * segmentDist;
                 }
 
                 if (bullet_index <= hit_count && dist > distances[bullet_index])
