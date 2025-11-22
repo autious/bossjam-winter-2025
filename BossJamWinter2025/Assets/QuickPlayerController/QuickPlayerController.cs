@@ -45,6 +45,9 @@ public class QuickPlayerController : NetworkBehaviour
     float gunCdTimer;
 
 
+    [SerializeField] GameObject laserPrefab;
+    private BounceRay laser;
+
     private void Awake() {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -108,6 +111,17 @@ public class QuickPlayerController : NetworkBehaviour
         if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
             gunCdTimer = gunCooldown;
             playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position, logicalFirePoint.rotation, gunFirePoint.position);
+        }
+
+        if(Input.GetMouseButtonDown(1)) {
+            laser = Instantiate(laserPrefab,logicalFirePoint.position, logicalFirePoint.rotation, logicalFirePoint.transform).GetComponent<BounceRay>();
+            laser.Preview(gunFirePoint.position);
+        }
+        if(Input.GetMouseButton(1)) {
+            laser.Preview(gunFirePoint.position);
+        }
+        if(Input.GetMouseButtonUp(1)) {
+            Destroy(laser.gameObject);
         }
     }
 
@@ -199,8 +213,7 @@ public class QuickPlayerController : NetworkBehaviour
         cam.localEulerAngles = new Vector3(my - tiltVector.y, 0, -tiltVector.x);
     }
 
-
     public void KillPlayer() {
-        
+
     }
 }

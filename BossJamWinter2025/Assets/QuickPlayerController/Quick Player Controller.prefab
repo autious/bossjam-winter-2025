@@ -5581,6 +5581,8 @@ MonoBehaviour:
   gunFirePoint: {fileID: 3958166995884197199}
   logicalFirePoint: {fileID: 6839643052924768987}
   gunCooldown: 0.4
+  laserPrefab: {fileID: 2129497574987532621, guid: 25caa90010e7f7144bc91888fab3f42b,
+    type: 3}
 --- !u!114 &6936437555770847401
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -58,13 +58,17 @@ public class BounceRay : MonoBehaviour
         StartCoroutine(ShootCoroutine(cosmetic,true));
     }
 
-    public void Preview()
+    public void Preview(Vector3 gunFirePoint)
     {
         Recalc();
         shotLineRenderer.gameObject.SetActive(false);
         previewLineRenderer.gameObject.SetActive(true);
-        for(int i = 0; i < hit_count; i++) {
-            previewLineRenderer.SetPosition(i, line_segment[i]);
+        previewLineRenderer.positionCount = Math.Min(5,hit_count);
+        if(hit_count > 1) {
+            previewLineRenderer.SetPosition(0, gunFirePoint);
+            for(int i = 1; i < previewLineRenderer.positionCount; i++) {
+                previewLineRenderer.SetPosition(i, line_segment[i]);
+            }
         }
     }
 
@@ -134,10 +138,6 @@ public class BounceRay : MonoBehaviour
         }
     }
 
-    public void UpdateLines()
-    {
-    }
-
     [Button("Recalc")]
     public void Recalc()
     {
@@ -149,9 +149,7 @@ public class BounceRay : MonoBehaviour
 
         for(int i = 0; i < MAX_BOUNCE; i++) {
             Ray ray = ray_sequence[i];
-            int num_hits = Physics.RaycastNonAlloc(ray,hits, 1000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
-            Debug.Log($"Num Hits {num_hits}");
-
+            int num_hits = Physics.RaycastNonAlloc(ray, hits, 10000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
 
             if (num_hits > 0) {
                 RaycastHit hit = hits[0];
@@ -179,7 +177,7 @@ public class BounceRay : MonoBehaviour
                     hitPlayer = hit.collider.gameObject.GetComponent<Hittable>();
                     break;
                 } else {
-                    Debug.Log($"Ignored Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
+                    Debug.LogWarning($"Ignored Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
                     hit_count = i+1;
                     distances[i+1] = distances[i] + 10.0f;
                     line_segment[i+1] = ray.origin + ray.direction * 100.0f;
