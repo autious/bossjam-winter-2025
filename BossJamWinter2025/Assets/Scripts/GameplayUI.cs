@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ public class GameplayUI : MonoBehaviour {
         }
 
         roundTimer.enabled = MapInstance.ActiveInstance != null;
+        killFeed.enabled = MapInstance.ActiveInstance != null;
+
         if (map != null) {
             switch (map.currentState) {
                 case GameState.PreGame:
@@ -28,6 +31,9 @@ public class GameplayUI : MonoBehaviour {
                     roundTimer.text = $"Ending: {map.currentStateTimer.RemainingTime(GameManager.Instance.runner):0.}s";
                     break;
             }
+
+            // Who cares about efficiency, just send it
+            killFeed.text = string.Join("\n", map.killFeed.Select((x) => x.message));
         }
     }
 }

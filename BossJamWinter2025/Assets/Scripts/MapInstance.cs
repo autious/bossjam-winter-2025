@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using System.Linq;
+using UnityEngine.Rendering;
 
 public enum GameState {
     PreGame,
     MidGame,
     PostGame,
+}
+
+public struct KillFeedEntry {
+    public string message;
+    public float time;
 }
 
 public class MapInstance : NetworkBehaviour {
@@ -19,7 +25,16 @@ public class MapInstance : NetworkBehaviour {
     [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
     [Networked] private int killGoal { get; set; } = 5;
 
+    public Queue<KillFeedEntry> killFeed = new();
+
     public NetworkObject playerPrefab;
+
+    protected void Update() {
+        // Remove items from the feed
+        while (killFeed.TryPeek(out var entry) && entry.time + 5 < Time.unscaledTime) {
+            killFeed.Dequeue();
+        }
+    }
 
     public override void Spawned() {
         base.Spawned();
@@ -65,6 +80,17 @@ public class MapInstance : NetworkBehaviour {
                     break;
             }
         }
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_ReportKill(PlayerRef killedPlayer, RpcInfo info = default) {
+        Debug.Log($"{info.Source} reported a kill");
+
+        // Add fluff for everyone
+        killFeed.Enqueue(new KillFeedEntry() {
+            message = $"Hello World! {info.Source} -> {killedPlayer}",
+            time = Time.unscaledTime,
+        });
     }
 
     protected virtual void UpdatePreGame() {
