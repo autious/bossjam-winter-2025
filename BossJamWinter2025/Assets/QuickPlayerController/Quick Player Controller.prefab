@@ -6012,6 +6012,7 @@ GameObject:
   - component: {fileID: 8666561129845860488}
   - component: {fileID: 8971552343031038465}
   - component: {fileID: 5537405085342686829}
+  - component: {fileID: 4633361483882714256}
   m_Layer: 10
   m_Name: HitBack
   m_TagString: Untagged
@@ -6029,7 +6030,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.30500007, z: -0.22200012}
-  m_LocalScale: {x: 0.3431425, y: 1, z: 0.087160796}
+  m_LocalScale: {x: 1.1681257, y: 2.173, z: 0.087160796}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6839643051927724531}
@@ -6105,6 +6106,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4633361483882714256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8566483678686039712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc39544883d6a6f41be2096a93c0c509, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8733679650984782406
 GameObject:
   m_ObjectHideFlags: 0
