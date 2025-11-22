@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
-using Fusion.Sockets;
-using System;
-using System.IO;
-using UnityEngine.Events;
+
+enum GameState {
+    PreGame,
+    MidGame,
+    PostGame,
+}
 
 public class MapInstance : NetworkBehaviour {
-    [Networked] private bool started { get; set; }
-    [Networked] private TickTimer timeRemaining { get; set; }
-    [Networked] private TickTimer endTimer { get; set; }
+    [Networked] private GameState currentState { get; set; } = GameState.PreGame;
+    [Networked] private TickTimer currentStateTimer { get; set; }
+
     [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
-    [Networked] private int killGoal { get; set; }
+    [Networked] private int killGoal { get; set; } = 5;
 
     public NetworkObject playerPrefab;
-
-    // public UnityEvent RoundEnded;
 
     public override void Spawned() {
         base.Spawned();
@@ -29,28 +29,58 @@ public class MapInstance : NetworkBehaviour {
     }
 
     public void StartRound() {
-        started = true;
-        timeRemaining = TickTimer.CreateFromSeconds(Runner, 60);
+        currentState = GameState.PreGame;
+        currentStateTimer = TickTimer.CreateFromSeconds(Runner, 4);
         kills.Clear();
         killGoal = 2;
 
-        Debug.Log("Round started");
+        Debug.Log("Started PreGame");
     }
 
     public override void FixedUpdateNetwork() {
         base.FixedUpdateNetwork();
 
         if (HasStateAuthority) {
-            if (endTimer.Expired(Runner)) {
-                enabled = false;
-                Debug.Log("Map ended, triggering next map");
-                GameManager.Instance.NextMap();
+            switch (currentState) {
+                case GameState.PreGame:
+                    UpdatePreGame();
+                    break;
+                case GameState.MidGame:
+                    UpdateMidGame();
+                    break;
+                case GameState.PostGame:
+                    UpdatePostGame();
+                    break;
             }
+        }
+    }
 
-            if (started && timeRemaining.Expired(Runner)) {
-                Debug.Log("Map ended, waiting...");
-                endTimer = TickTimer.CreateFromSeconds(Runner, 10);
-            }
+    protected virtual void UpdatePreGame() {
+        if (currentStateTimer.Expired(Runner)) {
+            Debug.Log("Starting Game...");
+
+            currentState = GameState.MidGame;
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 60);
+            kills.Clear();
+            killGoal = 2;
+        }
+    }
+
+    protected virtual void UpdateMidGame() {
+        if (currentStateTimer.Expired(Runner)) {
+            Debug.Log("Ending Game...");
+
+            currentState = GameState.PostGame;
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 20);
+        }
+    }
+
+    protected virtual void UpdatePostGame() {
+        if (currentStateTimer.Expired(Runner)) {
+            Debug.Log("Game Ended, triggering next map");
+
+            enabled = false; // Prevent further updates
+            GameManager.Instance.NextMap();
         }
     }
 }
