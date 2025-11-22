@@ -11,7 +11,7 @@ public enum GameState {
     PostGame,
 }
 
-public struct KillFeedEntry {
+public struct FeedEntry {
     public string message;
     public float time;
 }
@@ -25,14 +25,14 @@ public class MapInstance : NetworkBehaviour {
     [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
     [Networked] private int killGoal { get; set; } = 5;
 
-    public Queue<KillFeedEntry> killFeed = new();
+    public Queue<FeedEntry> feed = new();
 
     public NetworkObject playerPrefab;
 
     protected void Update() {
         // Remove items from the feed
-        while (killFeed.TryPeek(out var entry) && entry.time + 5 < Time.unscaledTime) {
-            killFeed.Dequeue();
+        while (feed.TryPeek(out var entry) && entry.time + 5 < Time.unscaledTime) {
+            feed.Dequeue();
         }
     }
 
@@ -115,7 +115,7 @@ public class MapInstance : NetworkBehaviour {
         Debug.Log($"{info.Source} reported a kill");
 
         // Add fluff for everyone
-        killFeed.Enqueue(new KillFeedEntry() {
+        feed.Enqueue(new FeedEntry() {
             message = $"Hello World! {info.Source} -> {killedPlayer}",
             time = Time.unscaledTime,
         });
