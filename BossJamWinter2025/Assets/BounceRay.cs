@@ -18,6 +18,7 @@ public class BounceRay : MonoBehaviour
 
     int hit_count = 0;
     bool hit_player = true;
+    Hittable hitPlayer;
     int MAX_BOUNCE = 64;
     Vector3[] line_segment = new Vector3[65];
     float[] distances = new float[65];
@@ -86,10 +87,14 @@ public class BounceRay : MonoBehaviour
                     trailing_pos = ray_sequence[trailing_index-1].origin + ray_sequence[trailing_index-1].direction * segment_trailing_dist;
                 }
 
-                float segmentDist = dist - distances[bullet_index-1];
-                Vector3 bullet_pos = ray_sequence[bullet_index-1].origin + ray_sequence[bullet_index - 1].direction * segmentDist;
+                Vector3 bullet_pos = line_segment[hit_count];
+                //Ensure bullet doesn't go beyond player.
+                if(!hit_player || bullet_index <= hit_count) {
+                    float segmentDist = dist - distances[bullet_index-1];
+                    bullet_pos = ray_sequence[bullet_index-1].origin + ray_sequence[bullet_index - 1].direction * segmentDist;
+                }
 
-                if (dist > distances[bullet_index] && bullet_index <= hit_count)
+                if (bullet_index <= hit_count && dist > distances[bullet_index])
                 {
                     if(bullet_index < hit_count) {
                         Instantiate(hitEffect, line_segment[bullet_index], Quaternion.identity);
@@ -97,14 +102,16 @@ public class BounceRay : MonoBehaviour
 
                     } else if(hit_player) {
                         Instantiate(hitSoundEffectPlayer, line_segment[bullet_index], Quaternion.identity);
+                        if(hitPlayer != null) {
+                            hitPlayer.OnHit(line_segment[bullet_index], Vector3.zero, cosmetic);
+                        }
                     } else {
                         Instantiate(hitSoundMiss, line_segment[bullet_index], Quaternion.identity);
                     }
                     bullet_index++;
-
                 }
 
-                int segment_count = Math.Min(bullet_index, Math.Max(0, bullet_index - trailing_index));
+                int segment_count = Math.Max(0, bullet_index - trailing_index);
                 shotLineRenderer.positionCount = segment_count+1+1;
                 shotLineRenderer.SetPosition(0, trailing_pos);
                 for(int k = 0; k < segment_count; k++) {
@@ -134,7 +141,7 @@ public class BounceRay : MonoBehaviour
 
         for(int i = 0; i < MAX_BOUNCE; i++) {
             Ray ray = ray_sequence[i];
-            int num_hits = Physics.RaycastNonAlloc(ray,hits);
+            int num_hits = Physics.RaycastNonAlloc(ray,hits, 1000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
             Debug.Log($"Num Hits {num_hits}");
 
 
@@ -161,6 +168,13 @@ public class BounceRay : MonoBehaviour
                     distances[i+1] = distances[i] + hit.distance;
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
                     hit_player = true;
+                    hitPlayer = hit.collider.gameObject.GetComponent<Hittable>();
+                    break;
+                } else {
+                    Debug.Log($"Ignored Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
+                    hit_count = i+1;
+                    distances[i+1] = distances[i] + 10.0f;
+                    line_segment[i+1] = ray.origin + ray.direction * 100.0f;
                     break;
                 }
             }

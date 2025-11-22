@@ -5,10 +5,11 @@ using Random = UnityEngine.Random;
 
 public class PlayerVoiceLines : NetworkBehaviour {
     
-    private static PlayerVoiceLines instance;
     
     [SerializeField] AudioSource audio;
+    [SerializeField] float minDelayBetweenVoicelines;
     [SerializeField] List<VoiceLine> voiceLines;
+    
     float lastVoicePlayedEvent;
     
     public enum VoiceEvent {
@@ -25,36 +26,22 @@ public class PlayerVoiceLines : NetworkBehaviour {
     struct VoiceLine {
         public VoiceEvent triggerEvent;
         public List<AudioClip> clip;
-        public float chance;
+        [Range(0,1f)]public float chance;
     }
-
-    private void OnEnable() {
-        if (HasStateAuthority == false) {
-            return;
-        }
-        instance = this;
-    }
-
-    private void OnDisable() {
-        if (HasStateAuthority == false) {
-            return;
-        }
-        instance = null;
-    }
+    
 
 
-    public static void TryPlayEvent(VoiceEvent voiceEvent) {
-        if (instance == null) return;
-        instance.TryPlayEvent_Internal(voiceEvent);
-    }
-
-    void TryPlayEvent_Internal(VoiceEvent voiceEvent) {
+    public void TryPlayEvent(VoiceEvent voiceEvent) {
+        Debug.Log("ccc");
         for (int eventIndex = 0; eventIndex < voiceLines.Count; eventIndex++) {
+            Debug.Log($"ccc #{eventIndex}");
             VoiceLine line = voiceLines[eventIndex];
             if (line.triggerEvent == voiceEvent) {
                 bool canPlayClip = Random.Range(0f, 1f) <= line.chance;
-                if (lastVoicePlayedEvent < Time.realtimeSinceStartup && canPlayClip) {
-                    lastVoicePlayedEvent = Time.realtimeSinceStartup;
+                Debug.Log($"ddddd FOUND EVENT!! #{eventIndex} - Lucky? {canPlayClip}, timer{lastVoicePlayedEvent < Time.time}");
+                if (lastVoicePlayedEvent < Time.time && canPlayClip) {
+                    Debug.Log($"eeeeeee canPlay #{eventIndex}");
+                    lastVoicePlayedEvent = Time.time + minDelayBetweenVoicelines;
                     int clipIndex = Random.Range(0, line.clip.Count);
                     RPC_PlayVoiceLine(eventIndex,clipIndex);
                 }
@@ -66,6 +53,7 @@ public class PlayerVoiceLines : NetworkBehaviour {
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_PlayVoiceLine(int eventIndex, int clipIndex) {
+        Debug.Log($"Playing voiceline -> {voiceLines[eventIndex].triggerEvent} #{clipIndex}");
         audio.PlayOneShot(voiceLines[eventIndex].clip[clipIndex]);
     }
     
