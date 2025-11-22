@@ -39,8 +39,8 @@ Material:
     m_Floats:
     - _BlendHeight: -3.27
     - _BlendRange: 7.66
-    - _MaxDistance: 20
-    - _MaxLightLevel: 2.9
+    - _MaxDistance: 50
+    - _MaxLightLevel: 1.82
     - _NoisePower: 0.56
     - _ScatteringPower: 0
     - _ShaftDensity: -0.09
