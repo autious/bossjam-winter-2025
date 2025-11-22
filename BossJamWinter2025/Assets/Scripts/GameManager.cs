@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
 
 using Random = UnityEngine.Random;
+using TMPro;
 
 #pragma warning disable UNT0006 // Incorrect message signature (Believe it is confusing Unity's own networking methods with Fusions')
 
@@ -21,12 +22,16 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     public static GameManager Instance { get; private set; }
 
     public NetworkRunner runner;
-    private string roomIdentifier = "test_room";
-    private string initialPlayerName = "player";
+    private string roomIdentifier = "default_room";
+    private string initialPlayerName = "default_player";
 
     public string[] gameplayScenePaths;
 
     public NetworkPlayerData networkPlayerDataPrefab;
+
+    public Canvas uiMain;
+    public TMP_InputField uiRoomInput;
+    public TMP_InputField uiPlayerName;
 
     protected void Awake() {
         Debug.Assert(Instance == null, "Trying to assign a second GameManager singleton instance!");
@@ -35,7 +40,14 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
         initialPlayerName = NameGenerator.Generate(1);
     }
 
-    private async void StartGame() {
+    protected void Start() {
+        uiRoomInput.text = roomIdentifier;
+        uiPlayerName.text = initialPlayerName;
+    }
+
+    public async void StartGame() {
+        uiMain.enabled = false;
+
         runner = gameObject.AddComponent<NetworkRunner>();
         runner.ProvideInput = true;
 
@@ -47,16 +59,12 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
         });
     }
 
-    protected void OnGUI() {
-        if (runner == null) {
-            GUILayout.BeginVertical();
-            if (GUILayout.Button("Enter")) {
-                StartGame();
-            }
-            roomIdentifier = GUILayout.TextField(roomIdentifier);
-            initialPlayerName = GUILayout.TextField(initialPlayerName);
-            GUILayout.EndVertical();
-        }
+    public void SetRoomIdentifier(string identifier) {
+        roomIdentifier = identifier;
+    }
+
+    public void SetPlayerName(string name) {
+        initialPlayerName = name;
     }
 
     public void NextMap() {
@@ -114,6 +122,11 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) {
+        Debug.Log("Network shut down, restarting!");
+        SceneManager.LoadScene(0);
+    }
+
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 }
