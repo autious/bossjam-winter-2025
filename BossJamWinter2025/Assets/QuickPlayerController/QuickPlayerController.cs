@@ -1,4 +1,5 @@
 ﻿using Fusion;
+using System;
 using UnityEngine;
 
 public class QuickPlayerController : NetworkBehaviour
@@ -34,6 +35,14 @@ public class QuickPlayerController : NetworkBehaviour
     [SerializeField] float tiltLerpSpeed = 10;
     Vector3 tiltVector;
     float mx, my;
+    
+    
+    [Header("Shooting")] 
+    [SerializeField] PlayerGun playerGun;
+    [SerializeField] Transform gunFirePoint;
+    [SerializeField] float gunCooldown;
+    float gunCdTimer;
+
 
     private void Awake() {
         Cursor.lockState = CursorLockMode.Locked;
@@ -91,6 +100,12 @@ public class QuickPlayerController : NetworkBehaviour
         float moveY = Input.GetAxisRaw("Vertical");
         bool jumpInput = Input.GetKeyDown(KeyCode.Space);
         Movement(moveX, moveY, jumpInput);
+
+        gunCdTimer -= Time.deltaTime;
+        if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
+            gunCdTimer = gunCooldown;
+            playerGun.RPC_ReportCosmeticBullet(gunFirePoint.position, gunFirePoint.rotation);
+        }
     }
 
     void FixedUpdate(){
