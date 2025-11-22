@@ -6,6 +6,8 @@ using Fusion.Sockets;
 using System;
 using UnityEngine.SceneManagement;
 
+using Random = UnityEngine.Random;
+
 #pragma warning disable UNT0006 // Incorrect message signature (Believe it is confusing Unity's own networking methods with Fusions')
 
 public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
@@ -13,12 +15,17 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
 
     public NetworkRunner runner;
     private string roomIdentifier = "test_room";
+    private string initialPlayerName = "player";
 
     public string[] gameplayScenePaths;
+
+    public NetworkPlayerData networkPlayerDataPrefab;
 
     protected void Awake() {
         Debug.Assert(Instance == null, "Trying to assign a second GameManager singleton instance!");
         Instance = this;
+
+        initialPlayerName = $"Player {UnityEngine.Random.Range(0, 421)}";
     }
 
     private async void StartGame() {
@@ -35,12 +42,13 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
 
     protected void OnGUI() {
         if (runner == null) {
-            GUILayout.BeginHorizontal();
+            GUILayout.BeginVertical();
             if (GUILayout.Button("Enter")) {
                 StartGame();
             }
             roomIdentifier = GUILayout.TextField(roomIdentifier);
-            GUILayout.EndHorizontal();
+            initialPlayerName = GUILayout.TextField(initialPlayerName);
+            GUILayout.EndVertical();
         }
     }
 
@@ -78,6 +86,13 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+        // Setup our own player data object instance
+        if (player == runner.LocalPlayer) {
+            var instance = runner.Spawn(networkPlayerDataPrefab, Vector3.zero, Quaternion.identity, player);
+            instance.playerName.Set(initialPlayerName);
+            instance.color = Color.HSVToRGB(Random.Range(0f, 1f), 0.7f, 0.9f);
+        }
+
         // If we are the master client, we need to initiate the game for everyone
         if (runner.IsSharedModeMasterClient) {
             NextMap();

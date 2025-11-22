@@ -44,5 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85edfbda14d48504aa6c23489d2aef68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runner: {fileID: 0}
   gameplayScenePaths:
   - Scenes/GameplayScenes/Template
+  networkPlayerDataPrefab: {fileID: -292173241722855814, guid: a4e5e2fd0e2c1ff44bfdd1b199437b5e,
+    type: 3}
