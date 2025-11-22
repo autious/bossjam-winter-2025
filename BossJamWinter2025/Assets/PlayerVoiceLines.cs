@@ -49,7 +49,6 @@ public class PlayerVoiceLines : NetworkBehaviour {
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_PlayVoiceLine(int eventIndex, int clipIndex) {
-        Debug.Log($"Playing voiceline -> {voiceLines[eventIndex].triggerEvent} #{clipIndex}");
         audio.PlayOneShot(voiceLines[eventIndex].clip[clipIndex]);
     }
     

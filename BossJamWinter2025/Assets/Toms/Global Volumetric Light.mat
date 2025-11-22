@@ -37,14 +37,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _MaxDistance: 50
-    - _MaxLightLevel: 0.59
+    - _BlendHeight: -3.27
+    - _BlendRange: 7.66
+    - _MaxDistance: 20
+    - _MaxLightLevel: 2.9
     - _NoisePower: 0.56
-    - _ScatteringPower: 1
-    - _ShaftDensity: 0.05
-    - _ShaftIntensity: 1
+    - _ScatteringPower: 0
+    - _ShaftDensity: -0.09
+    - _ShaftIntensity: 0.01
     - _VolumetricStepSize: 0.01
     - _VolumetricSteps: 64
     m_Colors:
-    - _ShaftColor: {r: 1, g: 0.6386374, b: 0.05098039, a: 1}
+    - _ShaftColor: {r: 0.21737763, g: 0.8113208, b: 0.17221434, a: 1}
+    - _ShaftColorBot: {r: 1, g: 0.6544861, b: 0.13679248, a: 1}
+    - _ShaftColorTop: {r: 0.59668, g: 1, b: 0.504717, a: 1}
   m_BuildTextureStacks: []
