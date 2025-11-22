@@ -115,7 +115,16 @@ public class MapInstance : NetworkBehaviour {
     }
 
     protected virtual void UpdateMidGame() {
-        if (currentStateTimer.Expired(Runner)) {
+        var killTargetReached = false;
+        foreach ((PlayerRef player, int count) in kills) {
+            Debug.Log(count);
+            if (count >= killGoal) {
+                killTargetReached = true;
+                break;
+            }
+        }
+
+        if (currentStateTimer.Expired(Runner) || killTargetReached) {
             Debug.Log("Ending Game...");
 
             currentState = GameState.PostGame;
