@@ -8,7 +8,7 @@ public class GameplayUI : MonoBehaviour {
     private MapInstance map;
 
     public TMP_Text roundTimer;
-    public TMP_Text killFeed;
+    public TMP_Text feed;
 
     protected void Update() {
         // Get a map instance from a singleton type field
@@ -17,7 +17,7 @@ public class GameplayUI : MonoBehaviour {
         }
 
         roundTimer.enabled = MapInstance.ActiveInstance != null;
-        killFeed.enabled = MapInstance.ActiveInstance != null;
+        feed.enabled = MapInstance.ActiveInstance != null;
 
         if (map != null) {
             switch (map.currentState) {
@@ -33,7 +33,7 @@ public class GameplayUI : MonoBehaviour {
             }
 
             // Who cares about efficiency, just send it
-            killFeed.text = string.Join("\n", map.killFeed.Select((x) => x.message));
+            feed.text = string.Join("\n", map.feed.Select((x) => x.message));
         }
     }
 }
