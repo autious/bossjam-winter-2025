@@ -185,6 +185,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4258127162754003549, guid: 03120f135ea7aeb4ead4ae8a7fc22b38,
+        type: 3}
+      propertyPath: gameplayScenePaths.Array.data[1]
+      value: Scenes/GameplayScenes/CylinderGameplayScene
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
