@@ -63,9 +63,11 @@ public class QuickPlayerController : NetworkBehaviour
 
     void Update()
     {
-        if (!HasStateAuthority)
-        {
-            return;
+        if (GameManager.Instance != null) {
+            if (!HasStateAuthority)
+            {
+                return;
+            }
         }
 
         if (GroundCheck())
@@ -110,9 +112,11 @@ public class QuickPlayerController : NetworkBehaviour
     }
 
     void FixedUpdate(){
-        if (!HasStateAuthority)
-        {
-            return;
+        if (GameManager.Instance != null) {
+            if (!HasStateAuthority)
+            {
+                return;
+            }
         }
 
         rb.AddForce(Vector3.down * gravity);
