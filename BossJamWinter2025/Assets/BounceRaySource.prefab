@@ -57,7 +57,7 @@ MonoBehaviour:
   hitSoundMiss: {fileID: 7188998172200550153, guid: 139867655fd978f47a1efa69ce8f77e1,
     type: 3}
   isCosmetic: 0
-  bulletSpeed: 80
+  bulletSpeed: 10
   trailingLength: 50
 --- !u!1 &2351560008068461979
 GameObject:

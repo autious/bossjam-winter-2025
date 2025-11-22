@@ -41,14 +41,15 @@ public class BounceRay : MonoBehaviour
     [Button("Shoot")]
     private void ShootDebug()
     {
-        Shoot(false);
+        Shoot(transform.position, false);
     }
 
-    public void Shoot(bool cosmetic)
+    public void Shoot(Vector3 gunFirePoint, bool cosmetic)
     {
         shotLineRenderer.gameObject.SetActive(true);
         previewLineRenderer.gameObject.SetActive(false);
         Recalc();
+        line_segment[0] = gunFirePoint;
         StartCoroutine(ShootCoroutine(cosmetic));
     }
 
@@ -79,8 +80,14 @@ public class BounceRay : MonoBehaviour
                     trailing_index++;
                 }
 
-                float segment_trailing_dist = trailing_dist - (trailing_index > 0 ? distances[trailing_index-1] : 0);
-                Vector3 trailing_pos = ray_sequence[trailing_index].origin + ray_sequence[trailing_index].direction * segment_trailing_dist;
+                Vector3 trailing_pos = line_segment[0];
+                if(trailing_index > 0) {
+                    float segment_trailing_dist = trailing_dist - distances[trailing_index-1];
+                    trailing_pos = ray_sequence[trailing_index-1].origin + ray_sequence[trailing_index-1].direction * segment_trailing_dist;
+                }
+
+                float segmentDist = dist - distances[bullet_index-1];
+                Vector3 bullet_pos = ray_sequence[bullet_index-1].origin + ray_sequence[bullet_index - 1].direction * segmentDist;
 
                 if (dist > distances[bullet_index] && bullet_index <= hit_count)
                 {
@@ -88,8 +95,6 @@ public class BounceRay : MonoBehaviour
                         Instantiate(hitEffect, line_segment[bullet_index], Quaternion.identity);
                         Instantiate(hitSoundEffect, line_segment[bullet_index], Quaternion.identity);
 
-                        float segmentDist = dist - distances[bullet_index];
-                        Vector3 pos = ray_sequence[bullet_index].origin + ray_sequence[bullet_index].direction * segmentDist;
                     } else if(hit_player) {
                         Instantiate(hitSoundEffectPlayer, line_segment[bullet_index], Quaternion.identity);
                     } else {
@@ -100,11 +105,13 @@ public class BounceRay : MonoBehaviour
                 }
 
                 int segment_count = Math.Min(bullet_index, Math.Max(0, bullet_index - trailing_index));
-                shotLineRenderer.positionCount = segment_count;
+                shotLineRenderer.positionCount = segment_count+1+1;
+                shotLineRenderer.SetPosition(0, trailing_pos);
                 for(int k = 0; k < segment_count; k++) {
                     int source_index = k + bullet_index - segment_count;
-                    shotLineRenderer.SetPosition(k, line_segment[source_index]);
+                    shotLineRenderer.SetPosition(k+1, line_segment[source_index]);
                 }
+                shotLineRenderer.SetPosition(segment_count+1, bullet_pos);
 
                 yield return null;
             }

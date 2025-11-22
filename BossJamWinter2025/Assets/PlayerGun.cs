@@ -9,11 +9,11 @@ public class PlayerGun : MonoBehaviour
 
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
-    public void RPC_ReportCosmeticBullet(Vector3 worldPosition, Quaternion rotation, RpcInfo info = default) {
+    public void RPC_ReportCosmeticBullet(Vector3 worldPosition, Quaternion rotation, Vector3 gunFirePoint, RpcInfo info = default) {
         BounceRay instance = Instantiate(bulletPrefab, worldPosition, rotation);
         instance.isCosmetic = !info.IsInvokeLocal;
         PlayShootAnim();
-        instance.Shoot(!info.IsInvokeLocal);
+        instance.Shoot(gunFirePoint, !info.IsInvokeLocal);
     }
 
     public void PlayShootAnim() {

@@ -35,11 +35,12 @@ public class QuickPlayerController : NetworkBehaviour
     [SerializeField] float tiltLerpSpeed = 10;
     Vector3 tiltVector;
     float mx, my;
-    
-    
-    [Header("Shooting")] 
+
+
+    [Header("Shooting")]
     [SerializeField] PlayerGun playerGun;
     [SerializeField] Transform gunFirePoint;
+    [SerializeField] Transform logicalFirePoint;
     [SerializeField] float gunCooldown;
     float gunCdTimer;
 
@@ -104,7 +105,7 @@ public class QuickPlayerController : NetworkBehaviour
         gunCdTimer -= Time.deltaTime;
         if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
             gunCdTimer = gunCooldown;
-            playerGun.RPC_ReportCosmeticBullet(gunFirePoint.position, gunFirePoint.rotation);
+            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position, logicalFirePoint.rotation, gunFirePoint.position);
         }
     }
 
@@ -127,13 +128,12 @@ public class QuickPlayerController : NetworkBehaviour
             AirAccelerate();
         }
     }
-    
      void AirAccelerate()
     {
         Vector3 wishdir = inputMotion;
         float wishspeed = maxSpeed;
         float airaccelerate = airAcceleration;
-        
+
         float addspeed;
         float accelspeed;
         float currentspeed;
@@ -159,7 +159,7 @@ public class QuickPlayerController : NetworkBehaviour
 
         rb.velocity += accelspeed * wishdir;
     }
-     
+
     void Movement(float moveX, float moveY, bool jumpInput)
     {
         //What direction are we moving in?
@@ -171,7 +171,7 @@ public class QuickPlayerController : NetworkBehaviour
 
         //The final motion result!
         finalMotion = controlMotion;
-        
+
         if (enableJumping && jumpInput && canJump)
         {
             canJump = false;
