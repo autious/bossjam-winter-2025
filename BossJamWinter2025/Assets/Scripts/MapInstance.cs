@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using System.Linq;
 
 enum GameState {
     PreGame,
@@ -22,9 +23,11 @@ public class MapInstance : NetworkBehaviour {
         base.Spawned();
 
         GameManager.Instance.OnMapBootstrapLoaded(this);
+        SpawnOwnPlayer();
+    }
 
-        // Just SEND it
-        var spawnPoint = GameObject.FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None).GetRandom();
+    private void SpawnOwnPlayer() {
+        var spawnPoint = GameObject.FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None).GetRandom(); // TODO Find a spawn point that doesn't have other people around it
         Runner.Spawn(playerPrefab, spawnPoint.transform.position + Vector3.up, spawnPoint.transform.rotation, Runner.LocalPlayer);
     }
 
@@ -39,6 +42,12 @@ public class MapInstance : NetworkBehaviour {
 
     public override void FixedUpdateNetwork() {
         base.FixedUpdateNetwork();
+
+        // Check if we need to respawn // TODO this should be in MidGame update, but since that is sectioned off for StateAuthority, we have it here for now
+        var allPlayers = GameObject.FindObjectsOfType<QuickPlayerController>();
+        if (!allPlayers.Any((x) => x.HasStateAuthority)) {
+            SpawnOwnPlayer();
+        }
 
         if (HasStateAuthority) {
             switch (currentState) {
