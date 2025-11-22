@@ -83,7 +83,7 @@ public class QuickPlayerController : NetworkBehaviour
                 float move = Vector3.Dot(head.forward, moveDir) >= 0 ? 1 : -1;
                 float strafe = Vector3.Dot(head.right, moveDir) >= 0 ? 1 : -1;
 
-                if (moveDir.magnitude == 0) {
+                if (moveDir.magnitude <= 0.05) {
                     move = 0;
                     strafe = 0;
                 }
