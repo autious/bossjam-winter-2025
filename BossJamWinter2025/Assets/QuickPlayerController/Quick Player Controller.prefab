@@ -5718,17 +5718,17 @@ MonoBehaviour:
   camThingy: {fileID: 6839643052924768986}
   airControl: 1
   moveSpeed: 100
-  maxSpeed: 8
+  maxSpeed: 5
   maxAirWishSpeed: 12
   airAcceleration: 150
   gravity: 32
   jumpHeight: 1.6
-  enableJumping: 1
+  enableJumping: 0
   coyoteTime: 0.2
   charAnim: {fileID: 8662060857718786850}
   charModel: {fileID: 8853367196310777984}
-  tiltAmount: 0.18
-  tiltLerpSpeed: 9
+  tiltAmount: 0
+  tiltLerpSpeed: 0
   playerVoice: {fileID: 8858752790860349707}
   playerGun: {fileID: 8457962913741600308}
   gunFirePoint: {fileID: 3958166995884197199}
@@ -5804,19 +5804,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2cb4c9f19a035439c1682f4ef35420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audio: {fileID: 0}
+  audio: {fileID: 1558891085338639373}
   minDelayBetweenVoicelines: 15
   voiceLines:
-  - triggerEvent: 5
-    clip:
-    - {fileID: 8300000, guid: cefb92aa978a27f42bc2fcdd8c8a5430, type: 3}
-    - {fileID: 8300000, guid: 2fd5d38caed8fcb43979587ebd39a7e3, type: 3}
-    - {fileID: 8300000, guid: cc67dd3aa1ddf8b45ac5d3b9f8391016, type: 3}
-    chance: 0.059
   - triggerEvent: 4
     clip:
-    - {fileID: 8300000, guid: 80199423fa774264db1e6ca6edf80070, type: 3}
-    chance: 0.03
+    - {fileID: 8300000, guid: 1d19bd2c9264bf447a8e823506d4f63c, type: 3}
+    - {fileID: 8300000, guid: 8a94663ccd8841c41975cd30e7439564, type: 3}
+    - {fileID: 8300000, guid: 0c0861f027bc21d47b273a8142e97657, type: 3}
+    - {fileID: 8300000, guid: 79796fde061ba7042ae54617b44ff06d, type: 3}
+    - {fileID: 8300000, guid: 654c4f2e403d3fd4d8ef055ced614e38, type: 3}
+    chance: 0.041
 --- !u!1 &6839643051927724530
 GameObject:
   m_ObjectHideFlags: 0

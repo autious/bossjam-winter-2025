@@ -1,7 +1,5 @@
 ﻿using Fusion;
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class QuickPlayerController : NetworkBehaviour
 {
@@ -34,7 +32,7 @@ public class QuickPlayerController : NetworkBehaviour
 
     [Header("Camera Settings.")] 
     [SerializeField] CharacterAnimation charAnim;
-    [FormerlySerializedAs("headModel"),SerializeField] GameObject charModel;
+    [SerializeField] GameObject charModel;
     [SerializeField] float tiltAmount = 10;
     [SerializeField] float tiltLerpSpeed = 10;
     Vector3 tiltVector;
@@ -230,6 +228,7 @@ public class QuickPlayerController : NetworkBehaviour
         my -= mouseY;
 
         my = Mathf.Clamp(my, -89, 89);
+        my = 0;
 
         tiltVector = Vector3.Lerp(tiltVector, head.InverseTransformDirection(rb.velocity) * tiltAmount, tiltLerpSpeed * Time.deltaTime);
 
