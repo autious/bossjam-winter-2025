@@ -56,9 +56,10 @@ MonoBehaviour:
     type: 3}
   hitSoundMiss: {fileID: 7188998172200550153, guid: 139867655fd978f47a1efa69ce8f77e1,
     type: 3}
-  isCosmetic: 0
   bulletSpeed: 1000
   trailingLength: 1000
+  shot_bounce_limit: 3
+  laser_bounce_limit: 1
 --- !u!1 &2351560008068461979
 GameObject:
   m_ObjectHideFlags: 0
