@@ -161,7 +161,7 @@ public class BounceRay : MonoBehaviour
                 }
 
                 if(hit.collider.gameObject.layer == 0) {
-                    Debug.Log($"Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
+                    // Debug.Log($"Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
 
                     Vector3 out_vector = Vector3.Reflect(ray.direction, hit.normal);
 
