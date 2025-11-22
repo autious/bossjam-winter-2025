@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterAnimation : MonoBehaviour
@@ -11,6 +9,13 @@ public class CharacterAnimation : MonoBehaviour
 
     [Space(12)]
     [SerializeField] bool inAir = false;
+
+    public void SetValues(float walk, float strafe, float aim, bool grounded) {
+        walkMotion = walk;
+        walkStrafe = strafe;
+        aimAngle = aim;
+        inAir = grounded;
+    }
 
     void Update() {
 
