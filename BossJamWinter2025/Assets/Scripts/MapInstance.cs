@@ -121,11 +121,20 @@ public class MapInstance : NetworkBehaviour {
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_ReportKill(PlayerRef killedPlayer, RpcInfo info = default) {
-        Debug.Log($"{info.Source} reported a kill");
+        bool isLocalPlayerInvolved = killedPlayer == Runner.LocalPlayer || info.Source == Runner.LocalPlayer;
 
-        // Add fluff for everyone
+        // Gather some data
+        NetworkPlayerData.TryGet(out NetworkPlayerData killee, killedPlayer);
+        NetworkPlayerData.TryGet(out NetworkPlayerData killer, info.Source);
+        if (killee == null || killer == null) {
+            Debug.LogWarning("We got a kill report, but one of the participants has no Network Player Data.. Ignoring!");
+            return;
+        }
+
+        // Add feed fluff
+        var feedColor = isLocalPlayerInvolved ? "#ae0c01ff" : "#f3fcf3ff";
         feed.Enqueue(new FeedEntry() {
-            message = $"Hello World! {info.Source} -> {killedPlayer}",
+            message = $"<color={feedColor}><b>{killer.playerName}</b> killed <b>{killee.playerName}</b></color>",
             time = Time.unscaledTime,
         });
 
