@@ -67,9 +67,7 @@ public class QuickPlayerController : NetworkBehaviour
     public override void Spawned()
     {
         camThingy.SetActive(HasStateAuthority);
-        //charModel.SetActive(HasStateAuthority == false);
         headModel.SetActive(HasStateAuthority == false);
-        charModel.SetActive(HasStateAuthority == false);
 
         var players = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None);
         var spawnPoints = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None); // Imagine caching any of this
@@ -183,7 +181,7 @@ public class QuickPlayerController : NetworkBehaviour
         if (laser == null) {
             laser = Instantiate(laserPrefab, logicalFirePoint.position + transform.forward * 0.3f,
                 logicalFirePoint.rotation, logicalFirePoint.transform).GetComponent<BounceRay>();
-            laser.Preview(gunFirePoint.position);
+            // laser.Preview(gunFirePoint.position);
         }
 
         laser.Preview(gunFirePoint.position);
