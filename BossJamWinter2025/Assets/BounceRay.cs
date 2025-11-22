@@ -194,13 +194,13 @@ public class BounceRay : MonoBehaviour
 
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
-                    ray_sequence[i+1] = new Ray(hit.point + out_vector * 0.01f, out_vector);
-                    line_segment[i+1] = hit.point;
+                    ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f + out_vector * 0.01f, out_vector);
+                    line_segment[i+1] = hit.point + hit.normal * 0.01f;
                 } else if(hit.collider.gameObject.layer == 10) {
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
-                    ray_sequence[i+1] = new Ray(hit.point, Vector3.zero);
+                    ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f, Vector3.zero);
                     hit_player = true;
                     hitPlayer = hit.collider.gameObject.GetComponent<Hittable>();
                     break;
@@ -211,7 +211,7 @@ public class BounceRay : MonoBehaviour
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
-                    ray_sequence[i+1] = new Ray(hit.point, Vector3.zero);
+                    ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f, Vector3.zero);
                     break;
                 }
             }
