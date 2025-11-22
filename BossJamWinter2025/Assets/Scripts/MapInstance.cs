@@ -118,6 +118,12 @@ public class MapInstance : NetworkBehaviour {
             return;
         }
 
+        // Despawn the player object when killed
+        if (isLocalPlayerInvolved && Runner.LocalPlayer == killedPlayer) {
+            var player = GameObject.FindObjectsOfType<QuickPlayerController>().FirstOrDefault((x) => x.HasStateAuthority);
+            Runner.Despawn(player.Object);
+        }
+
         // Add feed fluff
         var feedColor = isLocalPlayerInvolved ? "#ae0c01ff" : "#f3fcf3ff";
         GameManager.Instance.feed.Enqueue(new FeedEntry() {
