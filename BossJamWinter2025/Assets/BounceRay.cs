@@ -24,6 +24,7 @@ public class BounceRay : MonoBehaviour
     int hit_count = 0;
     bool hit_player = false;
     bool out_of_bounds = false;
+    float max_dist = 0.0f;
     Hittable hitPlayer;
 
     Vector3[] line_segment = null;
@@ -86,8 +87,8 @@ public class BounceRay : MonoBehaviour
         Recalc();
         shotLineRenderer.gameObject.SetActive(false);
         previewLineRenderer.gameObject.SetActive(true);
-        previewLineRenderer.positionCount = Math.Min(laser_bounce_limit + 2,hit_count);
-        if(hit_count > 1) {
+        previewLineRenderer.positionCount = Math.Min(laser_bounce_limit + 2, hit_count + 1);
+        if(hit_count > 0) {
             previewLineRenderer.SetPosition(0, gunFirePoint);
             for(int i = 1; i < previewLineRenderer.positionCount; i++) {
                 previewLineRenderer.SetPosition(i, line_segment[i]);
@@ -106,8 +107,10 @@ public class BounceRay : MonoBehaviour
             while(trailing_index <= hit_count) {
                 float dist = (Time.time - timeStart) * bulletSpeed;
                 float trailing_dist = Mathf.Max(0.0f, dist - trailingLength);
+                dist = Mathf.Min(max_dist, dist);
+                trailing_dist = Mathf.Min(max_dist, trailing_dist);
 
-                if(trailing_dist > distances[trailing_index] && trailing_index <= hit_count)
+                if(trailing_dist >= distances[trailing_index] && trailing_index <= hit_count)
                 {
                     trailing_index++;
                 }
@@ -127,7 +130,7 @@ public class BounceRay : MonoBehaviour
                     bullet_pos = ray_sequence[bullet_index - 1].origin + ray_sequence[bullet_index - 1].direction * segmentDist;
                 }
 
-                if (bullet_index <= hit_count && dist > distances[bullet_index])
+                if (bullet_index <= hit_count && dist >= distances[bullet_index])
                 {
                     if(bullet_index < hit_count) {
                         Instantiate(hitEffect, line_segment[bullet_index], Quaternion.identity);
@@ -194,11 +197,13 @@ public class BounceRay : MonoBehaviour
 
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
+                    max_dist = distances[i+1];
                     ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f + out_vector * 0.01f, out_vector);
                     line_segment[i+1] = hit.point + hit.normal * 0.01f;
                 } else if(hit.collider.gameObject.layer == 10) {
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
+                    max_dist = distances[i+1];
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
                     ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f, Vector3.zero);
                     hit_player = true;
@@ -208,8 +213,10 @@ public class BounceRay : MonoBehaviour
                     if(hit.collider.gameObject.layer != 6) {
                         Debug.LogWarning($"Ignored Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
                     }
+                    Debug.Log($"Hit {hit.collider.name}");
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
+                    max_dist = distances[i+1];
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
                     ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f, Vector3.zero);
                     break;
@@ -220,6 +227,7 @@ public class BounceRay : MonoBehaviour
                 out_of_bounds = true;
                 hit_count = i+1;
                 distances[i+1] = distances[i] + 10.0f;
+                max_dist = distances[i+1];
                 line_segment[i+1] = ray.origin + ray.direction * 100.0f;
                 break;
             }

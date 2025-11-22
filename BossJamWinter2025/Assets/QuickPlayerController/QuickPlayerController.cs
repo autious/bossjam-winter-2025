@@ -164,7 +164,7 @@ public class QuickPlayerController : NetworkBehaviour
                 bulletColor = npd.color;
             }
 
-            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position + transform.forward * 0.3f, logicalFirePoint.rotation, gunFirePoint.position, bulletColor);
+            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position + logicalFirePoint.transform.forward * 0.3f, logicalFirePoint.rotation, gunFirePoint.position, bulletColor);
             playerVoice.TryPlayEvent(PlayerVoiceLines.VoiceEvent.OnShotGun);
         }
 
@@ -179,7 +179,7 @@ public class QuickPlayerController : NetworkBehaviour
         // }
         //
         if (laser == null) {
-            laser = Instantiate(laserPrefab, logicalFirePoint.position + transform.forward * 0.3f,
+            laser = Instantiate(laserPrefab, logicalFirePoint.position + logicalFirePoint.transform.forward * 0.3f,
                 logicalFirePoint.rotation, logicalFirePoint.transform).GetComponent<BounceRay>();
             // laser.Preview(gunFirePoint.position);
         }
