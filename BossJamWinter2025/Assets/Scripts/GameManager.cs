@@ -95,9 +95,11 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
         // Setup our own player data object instance
         if (player == runner.LocalPlayer) {
-            var instance = runner.Spawn(networkPlayerDataPrefab, Vector3.zero, Quaternion.identity, player);
-            instance.playerName.Set(initialPlayerName);
-            instance.color = Color.HSVToRGB(Random.Range(0f, 1f), 0.7f, 0.9f);
+            runner.Spawn(networkPlayerDataPrefab, Vector3.zero, Quaternion.identity, player, onBeforeSpawned: (x, y) => {
+                var instance = y.GetComponent<NetworkPlayerData>();
+                instance.playerName = initialPlayerName;
+                instance.color = Color.HSVToRGB(Random.Range(0f, 1f), 0.7f, 0.9f);
+            });
         }
 
         // If we are the master client, we need to initiate the game for everyone

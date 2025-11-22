@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
-using Unity.VisualScripting;
 
 // Player metadata, each player spawns one while they are in the room, whoever has StateAuthority is the PlayerRef who's data this belongs to
 public class NetworkPlayerData : NetworkBehaviour {
-    [Networked] public NetworkString<_32> playerName { get; set; }
-    [Networked] public Color color { get; set; }
-
+    [SerializeField] [Networked] [Capacity(32)] public string playerName { get; set; }
+    [SerializeField] [Networked] public Color color { get; set; }
 
     public static List<NetworkPlayerData> instances = new();
 
@@ -20,6 +18,12 @@ public class NetworkPlayerData : NetworkBehaviour {
         base.Spawned();
 
         instances.Add(this);
+        if (MapInstance.ActiveInstance != null) {
+            MapInstance.ActiveInstance.feed.Enqueue(new FeedEntry() {
+                message = $"{playerName} joined!",
+                time = Time.unscaledTime,
+            });
+        }
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState) {
