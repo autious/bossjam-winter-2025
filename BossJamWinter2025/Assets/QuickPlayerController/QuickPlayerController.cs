@@ -11,7 +11,7 @@ public class QuickPlayerController : NetworkBehaviour
 
     [SerializeField] Transform head;
     [SerializeField] Transform cam;
-    [SerializeField] GameObject camThingy;
+    [SerializeField] public GameObject camThingy;
 
     [Header("Motion Settings")]
     [SerializeField, Range(0, 1)] float airControl;

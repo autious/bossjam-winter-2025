@@ -108,8 +108,8 @@ public class MapInstance : NetworkBehaviour {
             var player = GameObject.FindObjectsOfType<QuickPlayerController>().FirstOrDefault((x) => x.HasStateAuthority);
 
             var spectatorCamera = GameObject.FindFirstObjectByType<SpectatorCamera>();
-            spectatorCamera.transform.position = Camera.main.transform.position;
-            spectatorCamera.transform.rotation = Camera.main.transform.rotation;
+            spectatorCamera.transform.position = player.camThingy.transform.position;
+            spectatorCamera.transform.rotation = player.camThingy.transform.rotation;
             Runner.Despawn(player.Object);
         }
 
