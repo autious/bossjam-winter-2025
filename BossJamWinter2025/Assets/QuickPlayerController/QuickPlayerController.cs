@@ -75,10 +75,10 @@ public class QuickPlayerController : NetworkBehaviour
         var spawnPoints = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None); // Imagine caching any of this
 
         // Get some spawn points that are far enough from other players
-        const float MIN_DISTANCE = 5.0f;
+        const float MIN_DISTANCE = 10.0f;
         var validPoints = new List<SpawnPointPlayer>();
         foreach (var potentialSpawnPoint in spawnPoints) {
-            bool valid = false;
+            bool valid = true;
             foreach (var player in players) {
                 if (Vector3.Distance(potentialSpawnPoint.transform.position, player.transform.position) < MIN_DISTANCE) {
                     valid = false;
