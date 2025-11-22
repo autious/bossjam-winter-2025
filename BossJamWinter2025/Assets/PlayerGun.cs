@@ -2,8 +2,7 @@ using Fusion;
 using UnityEngine;
 
 
-public class PlayerGun : MonoBehaviour
-{
+public class PlayerGun : NetworkBehaviour {
     [SerializeField] BounceRay bulletPrefab;
     [SerializeField] Animator gunAnim;
 
