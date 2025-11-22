@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
         Debug.Assert(Instance == null, "Trying to assign a second GameManager singleton instance!");
         Instance = this;
 
-        initialPlayerName = $"Player {UnityEngine.Random.Range(0, 421)}";
+        initialPlayerName = NameGenerator.Generate(1);
     }
 
     private async void StartGame() {
