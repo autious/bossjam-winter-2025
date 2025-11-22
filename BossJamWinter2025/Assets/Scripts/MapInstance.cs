@@ -54,7 +54,8 @@ public class MapInstance : NetworkBehaviour {
     }
 
     private void SpawnOwnPlayer() {
-        Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
+        // Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
+        Runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
     }
 
     public void StartRound() {
