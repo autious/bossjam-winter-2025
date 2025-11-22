@@ -14,7 +14,7 @@ public class CharacterAnimation : MonoBehaviour
         walkMotion = walk;
         walkStrafe = strafe;
         aimAngle = aim;
-        inAir = grounded;
+        inAir = grounded == false;
     }
 
     void Update() {

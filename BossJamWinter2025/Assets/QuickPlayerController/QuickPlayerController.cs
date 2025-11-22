@@ -1,6 +1,7 @@
 ﻿using Fusion;
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class QuickPlayerController : NetworkBehaviour
 {
@@ -32,7 +33,7 @@ public class QuickPlayerController : NetworkBehaviour
 
     [Header("Camera Settings.")] 
     [SerializeField] CharacterAnimation charAnim;
-    [SerializeField] GameObject headModel;
+    [FormerlySerializedAs("headModel"),SerializeField] GameObject charModel;
     [SerializeField] float tiltAmount = 10;
     [SerializeField] float tiltLerpSpeed = 10;
     Vector3 tiltVector;
@@ -65,14 +66,29 @@ public class QuickPlayerController : NetworkBehaviour
     public override void Spawned()
     {
         cam.gameObject.SetActive(HasStateAuthority);
-        headModel.SetActive(HasStateAuthority == false);
+        charModel.SetActive(HasStateAuthority == false);
     }
 
-    void Update()
-    {
+    Vector3 posLastFrame = Vector3.zero;
+
+    void Update() {
         if (GameManager.Instance != null) {
             if (!HasStateAuthority)
             {
+                // Online player stuff
+                isGrounded = GroundCheck();
+                my = Mathf.Clamp(cam.localEulerAngles.x, -89, 89);
+                Vector3 moveDir = transform.position - posLastFrame;
+                moveDir.y = 0;
+                float move = Vector3.Dot(head.forward, moveDir) >= 0 ? 1 : -1;
+                float strafe = Vector3.Dot(head.right, moveDir) >= 0 ? 1 : -1;
+
+                if (moveDir.magnitude == 0) {
+                    move = 0;
+                    strafe = 0;
+                }
+                charAnim.SetValues(move, strafe, my, isGrounded);
+                posLastFrame = transform.position;
                 return;
             }
         }
@@ -128,9 +144,8 @@ public class QuickPlayerController : NetworkBehaviour
         if(Input.GetMouseButtonUp(1)) {
             Destroy(laser.gameObject);
         }
-        
-        charAnim.SetValues(moveX, moveY, mouseY, isGrounded);
     }
+
 
     void FixedUpdate(){
         if (GameManager.Instance != null) {
