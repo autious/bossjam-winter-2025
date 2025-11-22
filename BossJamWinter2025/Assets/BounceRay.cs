@@ -13,6 +13,8 @@ public class BounceRay : MonoBehaviour
     public GameObject hitSoundEffectPlayer;
     public GameObject hitSoundMiss;
 
+    public bool isCosmetic; // TODO hook up
+
     int hit_count = 0;
     bool hit_player = true;
     Vector3[] line_segment = new Vector3[65];
