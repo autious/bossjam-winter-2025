@@ -111,8 +111,7 @@ public class QuickPlayerController : NetworkBehaviour
 
     void Update() {
         if (GameManager.Instance != null) {
-            if (!HasStateAuthority)
-            {
+            if (!HasStateAuthority) {
                 // Online player stuff
                 isGrounded = GroundCheck();
                 my = Mathf.Clamp(cam.localEulerAngles.x, -89, 89);
@@ -125,33 +124,27 @@ public class QuickPlayerController : NetworkBehaviour
                     move = 0;
                     strafe = 0;
                 }
-                charAnim.SetValues(move, strafe, my, isGrounded);
+
+                charAnim.SetValues(move, strafe, my, true);
                 posLastFrame = transform.position;
                 return;
             }
         }
 
-        if (GroundCheck())
-        {
-            if (rb.velocity.y <= 0)
-            {
-                if (isGrounded == false)
-                {
+        if (GroundCheck()) {
+            if (rb.velocity.y <= 0) {
+                if (isGrounded == false) {
                     isGrounded = true;
                 }
+
                 canJump = true;
                 coyoteTimer = coyoteTime;
             }
-        }
-        else
-        {
+        } else {
             isGrounded = false;
-            if (coyoteTimer > 0)
-            {
+            if (coyoteTimer > 0) {
                 coyoteTimer -= Time.deltaTime;
-            }
-            else
-            {
+            } else {
                 canJump = false;
             }
         }
@@ -168,25 +161,45 @@ public class QuickPlayerController : NetworkBehaviour
         gunCdTimer -= Time.deltaTime;
         if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
             gunCdTimer = gunCooldown;
-            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position + transform.forward * 0.3f, logicalFirePoint.rotation, gunFirePoint.position);
+            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position + transform.forward * 0.3f,
+                logicalFirePoint.rotation, gunFirePoint.position);
             playerVoice.TryPlayEvent(PlayerVoiceLines.VoiceEvent.OnShotGun);
         }
 
-        if(Input.GetMouseButtonDown(1)) {
-            laser = Instantiate(laserPrefab,logicalFirePoint.position + transform.forward * 0.3f, logicalFirePoint.rotation, logicalFirePoint.transform).GetComponent<BounceRay>();
+         // if(Input.GetMouseButtonDown(1)) {
+        //     laser = Instantiate(laserPrefab,logicalFirePoint.position + transform.forward * 0.3f, logicalFirePoint.rotation, logicalFirePoint.transform).GetComponent<BounceRay>();
+        //     laser.Preview(gunFirePoint.position);
+        // }
+        // if(Input.GetMouseButton(1)) {
+        //     if(laser != null) {
+        //         laser.Preview(gunFirePoint.position);
+        //     }
+        // }
+        //
+        if (laser == null) {
+            laser = Instantiate(laserPrefab, logicalFirePoint.position + transform.forward * 0.3f,
+                logicalFirePoint.rotation, logicalFirePoint.transform).GetComponent<BounceRay>();
             laser.Preview(gunFirePoint.position);
         }
-        if(Input.GetMouseButton(1)) {
-            if(laser != null) {
+
+        if (Input.GetMouseButton(1)) {
+            if (laser != null) {
                 laser.Preview(gunFirePoint.position);
             }
         }
-        if(Input.GetMouseButtonUp(1)) {
-            if(laser != null) {
-                Destroy(laser.gameObject);
-                laser = null;
-            }
+
+        if (Input.GetMouseButtonUp(1)) {
+            Destroy(laser.gameObject);
+            laser = null;
         }
+
+        laser.Preview(gunFirePoint.position);
+
+        // if(Input.GetMouseButtonUp(1)) {
+        //     Destroy(laser.gameObject);
+        //     laser = null;
+        // }
+        charAnim.SetValues(0, 0, 0, true);
     }
 
 
