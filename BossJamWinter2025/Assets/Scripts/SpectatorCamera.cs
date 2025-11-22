@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpectatorCamera : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+public class SpectatorCamera : MonoBehaviour {
+    private AudioListener audioListener;
+
+    protected void Awake() {
+        audioListener = GetComponent<AudioListener>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    protected void Update() {
+        audioListener.enabled = Camera.main == null || Camera.main.gameObject == gameObject;
     }
 }
