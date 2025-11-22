@@ -4461,6 +4461,7 @@ MonoBehaviour:
   runner: {fileID: 0}
   gameplayScenePaths:
   - Scenes/GameplayScenes/CylinderGameplayScene
+  - Scenes/GameplayScenes/OfficeSpace
   networkPlayerDataPrefab: {fileID: -292173241722855814, guid: a4e5e2fd0e2c1ff44bfdd1b199437b5e,
     type: 3}
   uiMain: {fileID: 1197988772}

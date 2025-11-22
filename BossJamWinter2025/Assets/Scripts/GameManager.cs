@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
         var sceneIndex = SceneUtility.GetBuildIndexByScenePath(gameplayScenePaths.GetRandom());
         Debug.Assert(sceneIndex >= 0, "Failed getting scene from path, possibly forgot to add it to the build scene list");
 
-        runner.LoadScene(SceneRef.FromIndex(sceneIndex), LoadSceneMode.Single);
+        runner.LoadScene(SceneRef.FromIndex(4), LoadSceneMode.Single);
     }
 
     public void OnMapBootstrapLoaded(MapInstance mapBootstrap) {
