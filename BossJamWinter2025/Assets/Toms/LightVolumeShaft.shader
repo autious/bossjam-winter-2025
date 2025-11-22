@@ -228,7 +228,7 @@ Shader "Hidden/LightVolumeShaft"
                     float extinction = exp(-_ShaftDensity * (i * stepSize));
 
                     float2 noise_uv = (currentPos.xz * 0.5 + input.uv) * (currentPos.y * 0.01);
-                    noise_uv.y += sin(_Time.x);
+                    noise_uv.y -= (_Time.x);
                     // noise_uv.x += sin(_Time.x * 0.02) * 1.31;
                     float noise = 0;
                     Unity_SimpleNoise_float(noise_uv, 100, noise);
