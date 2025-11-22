@@ -94,7 +94,7 @@ public class BounceRay : MonoBehaviour
                     bullet_pos = ray_sequence[bullet_index-1].origin + ray_sequence[bullet_index - 1].direction * segmentDist;
                 }
 
-                if (dist > distances[bullet_index] && bullet_index <= hit_count)
+                if (bullet_index <= hit_count && dist > distances[bullet_index])
                 {
                     if(bullet_index < hit_count) {
                         Instantiate(hitEffect, line_segment[bullet_index], Quaternion.identity);

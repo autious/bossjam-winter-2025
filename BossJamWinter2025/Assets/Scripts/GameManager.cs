@@ -117,11 +117,11 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
                 instance.playerName = initialPlayerName;
                 instance.color = Color.HSVToRGB(Random.Range(0f, 1f), 0.7f, 0.9f);
             });
-        }
 
-        // If we are the master client, we need to initiate the game for everyone
-        if (runner.IsSharedModeMasterClient) {
-            NextMap();
+            // If we are the master client, we need to initiate the game for everyone
+            if (runner.IsSharedModeMasterClient) {
+                NextMap();
+            }
         }
     }
 
