@@ -194,4 +194,9 @@ public class QuickPlayerController : NetworkBehaviour
         head.localEulerAngles = new Vector3(0, mx, 0);
         cam.localEulerAngles = new Vector3(my - tiltVector.y, 0, -tiltVector.x);
     }
+
+
+    public void KillPlayer() {
+        
+    }
 }
