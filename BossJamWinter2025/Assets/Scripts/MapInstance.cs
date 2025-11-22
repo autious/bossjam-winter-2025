@@ -83,7 +83,13 @@ public class MapInstance : NetworkBehaviour {
             Debug.LogWarning("Unable to find a suitable spawn point, choosing a random one");
         }
 
-        Runner.Spawn(playerPrefab, spawnPoint.transform.position + Vector3.up, spawnPoint.transform.rotation, Runner.LocalPlayer);
+        Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer, onBeforeSpawned: (x, y) => {
+            var rb = y.GetComponent<Rigidbody>();
+            rb.position = spawnPoint.transform.position + Vector3.up;
+            rb.rotation = spawnPoint.transform.rotation;
+            y.transform.position = spawnPoint.transform.position + Vector3.up;
+            y.transform.rotation = spawnPoint.transform.rotation;
+        });
     }
 
     public void StartRound() {
