@@ -12,6 +12,7 @@ public class PlayerGun : MonoBehaviour
     public void RPC_ReportCosmeticBullet(Vector3 worldPosition, Quaternion rotation, RpcInfo info = default) {
         BounceRay instance = Instantiate(bulletPrefab, worldPosition, rotation);
         instance.isCosmetic = !info.IsInvokeLocal;
+        PlayShootAnim();
     }
 
     public void PlayShootAnim() {
