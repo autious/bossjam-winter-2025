@@ -45,7 +45,7 @@ public class MapInstance : NetworkBehaviour {
         var spawnPoints = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None); // Imagine caching any of this
 
         // Get some spawn points that are far enough from other players
-        const float MIN_DISTANCE = 10.0f;
+        const float MIN_DISTANCE = 5.0f;
         var validPoints = new List<SpawnPointPlayer>();
         foreach (var potentialSpawnPoint in spawnPoints) {
             bool valid = false;
