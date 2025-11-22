@@ -54,42 +54,7 @@ public class MapInstance : NetworkBehaviour {
     }
 
     private void SpawnOwnPlayer() {
-        var players = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None);
-        var spawnPoints = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None); // Imagine caching any of this
-
-        // Get some spawn points that are far enough from other players
-        const float MIN_DISTANCE = 5.0f;
-        var validPoints = new List<SpawnPointPlayer>();
-        foreach (var potentialSpawnPoint in spawnPoints) {
-            bool valid = false;
-            foreach (var player in players) {
-                if (Vector3.Distance(potentialSpawnPoint.transform.position, player.transform.position) < MIN_DISTANCE) {
-                    valid = false;
-                }
-            }
-
-            // TODO Add a raycast to make sure we don't spawn visible to other players
-
-            if (valid) {
-                validPoints.Add(potentialSpawnPoint);
-            }
-        }
-
-        // Select the spawn point to actually use
-        SpawnPointPlayer spawnPoint = spawnPoints.GetRandom();
-        if (validPoints.Count > 0) {
-            spawnPoint = validPoints.GetRandom();
-        } else {
-            Debug.LogWarning("Unable to find a suitable spawn point, choosing a random one");
-        }
-
-        Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer, onBeforeSpawned: (x, y) => {
-            var rb = y.GetComponent<Rigidbody>();
-            rb.position = spawnPoint.transform.position + Vector3.up;
-            rb.rotation = spawnPoint.transform.rotation;
-            y.transform.position = spawnPoint.transform.position + Vector3.up;
-            y.transform.rotation = spawnPoint.transform.rotation;
-        });
+        Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
     }
 
     public void StartRound() {

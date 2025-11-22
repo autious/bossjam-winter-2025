@@ -1,4 +1,5 @@
 ﻿using Fusion;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class QuickPlayerController : NetworkBehaviour
@@ -68,6 +69,42 @@ public class QuickPlayerController : NetworkBehaviour
         camThingy.SetActive(HasStateAuthority);
         //charModel.SetActive(HasStateAuthority == false);
         headModel.SetActive(HasStateAuthority == false);
+        charModel.SetActive(HasStateAuthority == false);
+
+        var players = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None);
+        var spawnPoints = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None); // Imagine caching any of this
+
+        // Get some spawn points that are far enough from other players
+        const float MIN_DISTANCE = 5.0f;
+        var validPoints = new List<SpawnPointPlayer>();
+        foreach (var potentialSpawnPoint in spawnPoints) {
+            bool valid = false;
+            foreach (var player in players) {
+                if (Vector3.Distance(potentialSpawnPoint.transform.position, player.transform.position) < MIN_DISTANCE) {
+                    valid = false;
+                }
+            }
+
+            // TODO Add a raycast to make sure we don't spawn visible to other players
+
+            if (valid) {
+                validPoints.Add(potentialSpawnPoint);
+            }
+        }
+
+        // Select the spawn point to actually use
+        SpawnPointPlayer spawnPoint = spawnPoints.GetRandom();
+        if (validPoints.Count > 0) {
+            spawnPoint = validPoints.GetRandom();
+        } else {
+            Debug.LogWarning("Unable to find a suitable spawn point, choosing a random one");
+        }
+
+        var rb = GetComponent<Rigidbody>();
+        rb.position = spawnPoint.transform.position + Vector3.up;
+        rb.rotation = spawnPoint.transform.rotation;
+        transform.position = spawnPoint.transform.position + Vector3.up;
+        transform.rotation = spawnPoint.transform.rotation;
     }
 
     Vector3 posLastFrame = Vector3.zero;
