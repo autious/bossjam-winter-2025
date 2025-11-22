@@ -143,6 +143,8 @@ public class MapInstance : NetworkBehaviour {
     }
 
     protected virtual void UpdateMidGame() {
+        return; // Just ignore timers and win conditions
+
         var killTargetReached = false;
         foreach ((PlayerRef player, int count) in kills) {
             if (count >= killGoal) {
