@@ -111,20 +111,8 @@ public class QuickPlayerController : NetworkBehaviour
         if (GameManager.Instance != null) {
             if (!HasStateAuthority) {
                 // Online player stuff
-                return;
-                my = Mathf.Clamp(cam.localEulerAngles.x, -89, 89);
-                Vector3 moveDir = (transform.position - posLastFrame).normalized;
-                moveDir.y = 0;
-                float move = Vector3.Dot(head.forward, moveDir) >= 0 ? 1 : -1;
-                float strafe = Vector3.Dot(head.right, moveDir) >= 0 ? 1 : -1;
-
-                if (moveDir.magnitude <= 0.05) {
-                    move = 0;
-                    strafe = 0;
-                }
-
-                charAnim.SetValues(move, strafe, my, true);
-                posLastFrame = transform.position;
+                
+                charAnim.SetValues(walk, strafe, 0, true);
                 return;
             }
         }
