@@ -5797,7 +5797,7 @@ MonoBehaviour:
   camThingy: {fileID: 6839643052924768986}
   airControl: 1
   moveSpeed: 100
-  maxSpeed: 3
+  maxSpeed: 2
   maxAirWishSpeed: 12
   airAcceleration: 150
   gravity: 32
@@ -5813,9 +5813,11 @@ MonoBehaviour:
   playerGun: {fileID: 8457962913741600308}
   gunFirePoint: {fileID: 238733864552373479}
   logicalFirePoint: {fileID: 7043143721482096484}
-  gunCooldown: 1
+  gunCooldown: 2.5
   laserPrefab: {fileID: 2129497574987532621, guid: 25caa90010e7f7144bc91888fab3f42b,
     type: 3}
+  _walk: 0
+  _strafe: 0
 --- !u!114 &6936437555770847401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6350,8 +6352,8 @@ Transform:
   m_GameObject: {fileID: 8566483678686039712}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.295, z: -0.026}
-  m_LocalScale: {x: 0.36969537, y: 0.8914152, z: 0.087160796}
+  m_LocalPosition: {x: 0, y: 1.295, z: -0.172}
+  m_LocalScale: {x: 0.36969537, y: 0.8914152, z: 0.42408958}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2996315042204520305}
