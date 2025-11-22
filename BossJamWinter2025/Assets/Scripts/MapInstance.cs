@@ -10,6 +10,7 @@ public enum GameState {
     PreGame,
     MidGame,
     PostGame,
+    None,
 }
 
 public class MapInstance : NetworkBehaviour {
@@ -167,8 +168,8 @@ public class MapInstance : NetworkBehaviour {
         if (currentStateTimer.Expired(Runner)) {
             Debug.Log("Game Ended, triggering next map");
 
-            enabled = false; // Prevent further updates
             GameManager.Instance.NextMap();
+            currentState = GameState.None;
         }
     }
 }

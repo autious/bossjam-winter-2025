@@ -30,7 +30,9 @@ public class QuickPlayerController : NetworkBehaviour
     Vector3 inputMotion, controlMotion, finalMotion;
     bool isGrounded = true;
 
-    [Header("Camera Settings.")]
+    [Header("Camera Settings.")] 
+    [SerializeField] CharacterAnimation charAnim;
+    [SerializeField] GameObject headModel;
     [SerializeField] float tiltAmount = 10;
     [SerializeField] float tiltLerpSpeed = 10;
     Vector3 tiltVector;
@@ -38,6 +40,7 @@ public class QuickPlayerController : NetworkBehaviour
 
 
     [Header("Shooting")]
+    [SerializeField] PlayerVoiceLines playerVoice;
     [SerializeField] PlayerGun playerGun;
     [SerializeField] Transform gunFirePoint;
     [SerializeField] Transform logicalFirePoint;
@@ -58,10 +61,11 @@ public class QuickPlayerController : NetworkBehaviour
         bool _result = Physics.CheckSphere(transform.position + new Vector3(0, col.radius - 0.1f, 0), col.radius - 0.05f, collisionLayer);
         return _result;
     }
-
+    
     public override void Spawned()
     {
         cam.gameObject.SetActive(HasStateAuthority);
+        headModel.SetActive(HasStateAuthority == false);
     }
 
     void Update()
@@ -111,6 +115,7 @@ public class QuickPlayerController : NetworkBehaviour
         if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
             gunCdTimer = gunCooldown;
             playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position, logicalFirePoint.rotation, gunFirePoint.position);
+            playerVoice.TryPlayEvent(PlayerVoiceLines.VoiceEvent.OnShotGun);
         }
 
         if(Input.GetMouseButtonDown(1)) {
@@ -123,6 +128,8 @@ public class QuickPlayerController : NetworkBehaviour
         if(Input.GetMouseButtonUp(1)) {
             Destroy(laser.gameObject);
         }
+        
+        charAnim.SetValues(moveX, moveY, mouseY, isGrounded);
     }
 
     void FixedUpdate(){
@@ -197,6 +204,7 @@ public class QuickPlayerController : NetworkBehaviour
             Vector3 currentVelocity = rb.velocity;
             currentVelocity.y = Mathf.Sqrt(2 * jumpHeight * gravity);
             rb.velocity = currentVelocity;
+            playerVoice.TryPlayEvent(PlayerVoiceLines.VoiceEvent.OnJump);
         }
     }
 
@@ -212,8 +220,8 @@ public class QuickPlayerController : NetworkBehaviour
         head.localEulerAngles = new Vector3(0, mx, 0);
         cam.localEulerAngles = new Vector3(my - tiltVector.y, 0, -tiltVector.x);
     }
-
+    
     public void KillPlayer() {
-
+        MapInstance.ActiveInstance.RPC_ReportKill(Object.StateAuthority);
     }
 }
