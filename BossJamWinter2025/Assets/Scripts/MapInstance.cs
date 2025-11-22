@@ -106,6 +106,10 @@ public class MapInstance : NetworkBehaviour {
         // Despawn the player object when killed
         if (isLocalPlayerInvolved && Runner.LocalPlayer == killedPlayer) {
             var player = GameObject.FindObjectsOfType<QuickPlayerController>().FirstOrDefault((x) => x.HasStateAuthority);
+
+            var spectatorCamera = GameObject.FindFirstObjectByType<SpectatorCamera>();
+            spectatorCamera.transform.position = Camera.main.transform.position;
+            spectatorCamera.transform.rotation = Camera.main.transform.rotation;
             Runner.Despawn(player.Object);
         }
 
