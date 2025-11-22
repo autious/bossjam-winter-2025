@@ -18,8 +18,8 @@ public struct FeedEntry {
 }
 
 public class MapInstance : NetworkBehaviour {
-    [RuntimeInitializeOnLoadMethod]
     [Preserve]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
     private static void Init() {
         ActiveInstance = null;
     }
@@ -46,8 +46,10 @@ public class MapInstance : NetworkBehaviour {
     public override void Spawned() {
         base.Spawned();
 
-        GameManager.Instance.OnMapBootstrapLoaded(this);
+        Debug.Assert(ActiveInstance == null, "There already was an active map instance, something went wrong");
         ActiveInstance = this;
+
+        GameManager.Instance.OnMapBootstrapLoaded(this);
         SpawnOwnPlayer();
     }
 

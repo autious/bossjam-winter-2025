@@ -12,6 +12,10 @@ public class NetworkPlayerData : NetworkBehaviour {
 
     public static List<NetworkPlayerData> instances = new();
 
+    protected void Awake() {
+        DontDestroyOnLoad(gameObject);
+    }
+
     public override void Spawned() {
         base.Spawned();
 

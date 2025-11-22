@@ -12,8 +12,8 @@ using Random = UnityEngine.Random;
 #pragma warning disable UNT0006 // Incorrect message signature (Believe it is confusing Unity's own networking methods with Fusions')
 
 public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
-    [RuntimeInitializeOnLoadMethod]
     [Preserve]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
     private static void Init() {
         Instance = null;
     }
