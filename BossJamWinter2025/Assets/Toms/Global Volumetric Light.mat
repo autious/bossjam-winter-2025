@@ -40,11 +40,11 @@ Material:
     - _BlendHeight: -3.27
     - _BlendRange: 7.66
     - _MaxDistance: 50
-    - _MaxLightLevel: 1.82
+    - _MaxLightLevel: 0.3
     - _NoisePower: 0.56
-    - _ScatteringPower: 0
-    - _ShaftDensity: -0.09
-    - _ShaftIntensity: 0.01
+    - _ScatteringPower: 0.91
+    - _ShaftDensity: 0.08
+    - _ShaftIntensity: 1
     - _VolumetricStepSize: 0.01
     - _VolumetricSteps: 64
     m_Colors:
