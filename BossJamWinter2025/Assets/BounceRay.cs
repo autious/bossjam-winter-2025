@@ -37,7 +37,7 @@ public class BounceRay : MonoBehaviour
         }
     }
 
-    RaycastHit[] hits = new RaycastHit[8];
+    RaycastHit[] hits = new RaycastHit[16];
 
     [Button("Shoot")]
     private void ShootDebug()
@@ -150,6 +150,7 @@ public class BounceRay : MonoBehaviour
         for(int i = 0; i < MAX_BOUNCE; i++) {
             Ray ray = ray_sequence[i];
             int num_hits = Physics.RaycastNonAlloc(ray, hits, 10000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
+            //int num_hits = Physics.SphereCastNonAlloc(ray, 0.25f, hits, 1000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
 
             if (num_hits > 0) {
                 RaycastHit hit = hits[0];
@@ -166,6 +167,7 @@ public class BounceRay : MonoBehaviour
 
                     Vector3 out_vector = Vector3.Reflect(ray.direction, hit.normal);
 
+                    hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
                     ray_sequence[i+1] = new Ray(hit.point + out_vector * 0.01f, out_vector);
                     line_segment[i+1] = hit.point;
