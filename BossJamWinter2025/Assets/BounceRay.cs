@@ -30,16 +30,20 @@ public class BounceRay : MonoBehaviour
     RaycastHit[] hits = new RaycastHit[8];
 
     [Button("Shoot")]
-    public void Shoot()
+    private void ShootDebug()
+    {
+        Shoot(false);
+    }
+    public void Shoot(bool cosmetic)
     {
         Recalc();
-        StartCoroutine(ShootCoroutine());
+        StartCoroutine(ShootCoroutine(cosmetic));
     }
 
     public float bulletSpeed = 100.0f;
     public float trailingLength = 100.0f;
 
-    private IEnumerator ShootCoroutine() {
+    private IEnumerator ShootCoroutine(bool cosmetic) {
         if(Application.isPlaying) {
             float timeStart = Time.time;
             int trailing_index = 0;
