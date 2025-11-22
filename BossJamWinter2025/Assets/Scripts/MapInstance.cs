@@ -128,7 +128,7 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Ending Game...");
 
             currentState = GameState.PostGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 20);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 10);
         }
     }
 
