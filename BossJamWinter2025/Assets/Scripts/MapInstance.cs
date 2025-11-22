@@ -5,6 +5,7 @@ using Fusion;
 using System.Linq;
 using UnityEngine.Rendering;
 using UnityEngine.Scripting;
+using System.Threading.Tasks;
 
 public enum GameState {
     PreGame,
@@ -30,17 +31,22 @@ public class MapInstance : NetworkBehaviour {
 
     public NetworkObject playerPrefab;
 
+    public Coroutine respawnCoroutine;
+
     protected void Update() {
         // We likely don't have authority over this object, so we cannot do this in `FixedUpdateNetwork`
         if (Object == null || !Object.IsValid) {
             return;
         }
 
-        // Check if we need to respawn // TODO this should be in MidGame update, but since that is sectioned off for StateAuthority, we have it here for now
-        var allPlayers = GameObject.FindObjectsOfType<QuickPlayerController>();
-        if (!allPlayers.Any((x) => x.HasStateAuthority)) {
-            SpawnOwnPlayer();
+        if (respawnCoroutine == null) {
+            // Check if we need to respawn // TODO this should be in MidGame update, but since that is sectioned off for StateAuthority, we have it here for now
+            var allPlayers = GameObject.FindObjectsOfType<QuickPlayerController>();
+            if (!allPlayers.Any((x) => x.HasStateAuthority)) {
+                respawnCoroutine = StartCoroutine(RespawnCoroutine());
+            }
         }
+
     }
 
     public override void Spawned() {
@@ -50,12 +56,14 @@ public class MapInstance : NetworkBehaviour {
         ActiveInstance = this;
 
         GameManager.Instance.OnMapBootstrapLoaded(this);
-        SpawnOwnPlayer();
     }
 
-    private void SpawnOwnPlayer() {
-        // Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
-        Runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
+    public IEnumerator RespawnCoroutine() {
+        yield return new WaitForSeconds(1);
+
+        yield return Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
+        yield return new WaitForSeconds(2);
+        respawnCoroutine = null;
     }
 
     public void StartRound() {
@@ -124,9 +132,9 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Starting Game...");
 
             currentState = GameState.MidGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 60);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 120);
             kills.Clear();
-            killGoal = 2;
+            killGoal = 5;
         }
     }
 
