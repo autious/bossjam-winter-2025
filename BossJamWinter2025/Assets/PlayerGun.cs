@@ -7,10 +7,10 @@ public class PlayerGun : NetworkBehaviour {
     [SerializeField] Animator gunAnim;
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
-    public void RPC_ReportCosmeticBullet(Vector3 worldPosition, Quaternion rotation, Vector3 gunFirePoint, RpcInfo info = default) {
+    public void RPC_ReportCosmeticBullet(Vector3 worldPosition, Quaternion rotation, Vector3 gunFirePoint, Color bulletColor, RpcInfo info = default) {
         BounceRay instance = Instantiate(bulletPrefab, worldPosition, rotation);
         PlayShootAnim();
-        instance.Shoot(gunFirePoint, !info.IsInvokeLocal);
+        instance.Shoot(gunFirePoint, !info.IsInvokeLocal, bulletColor);
     }
 
     public void PlayShootAnim() {

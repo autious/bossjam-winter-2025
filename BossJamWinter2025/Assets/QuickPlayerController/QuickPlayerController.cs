@@ -168,7 +168,12 @@ public class QuickPlayerController : NetworkBehaviour
         gunCdTimer -= Time.deltaTime;
         if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
             gunCdTimer = gunCooldown;
-            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position + transform.forward * 0.3f, logicalFirePoint.rotation, gunFirePoint.position);
+            Color bulletColor = Color.red;
+            if(NetworkPlayerData.TryGet(out NetworkPlayerData npd, Object.StateAuthority)) {
+                bulletColor = npd.color;
+            }
+
+            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position + transform.forward * 0.3f, logicalFirePoint.rotation, gunFirePoint.position, bulletColor);
             playerVoice.TryPlayEvent(PlayerVoiceLines.VoiceEvent.OnShotGun);
         }
 

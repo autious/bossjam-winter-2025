@@ -60,12 +60,14 @@ public class BounceRay : MonoBehaviour
         StartCoroutine(ShootCoroutine(true,false));
     }
 
-    public void Shoot(Vector3 gunFirePoint, bool cosmetic)
+    public void Shoot(Vector3 gunFirePoint, bool cosmetic, Color bulletColor)
     {
         shotLineRenderer.gameObject.SetActive(true);
         previewLineRenderer.gameObject.SetActive(false);
         Recalc();
         line_segment[0] = gunFirePoint;
+        shotLineRenderer.startColor = bulletColor;
+        shotLineRenderer.endColor = bulletColor;
         StartCoroutine(ShootCoroutine(cosmetic,true));
     }
 
