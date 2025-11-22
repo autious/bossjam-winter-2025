@@ -3,26 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using System.Linq;
+using UnityEngine.Rendering;
 
-enum GameState {
+public enum GameState {
     PreGame,
     MidGame,
     PostGame,
 }
 
+public struct KillFeedEntry {
+    public string message;
+    public float time;
+}
+
 public class MapInstance : NetworkBehaviour {
-    [Networked] private GameState currentState { get; set; } = GameState.PreGame;
-    [Networked] private TickTimer currentStateTimer { get; set; }
+    public static MapInstance ActiveInstance { get; private set; }
+
+    [Networked] public GameState currentState { get; private set; } = GameState.PreGame;
+    [Networked] public TickTimer currentStateTimer { get; private set; }
 
     [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
     [Networked] private int killGoal { get; set; } = 5;
 
+    public Queue<KillFeedEntry> killFeed = new();
+
     public NetworkObject playerPrefab;
+
+    protected void Update() {
+        // Remove items from the feed
+        while (killFeed.TryPeek(out var entry) && entry.time + 5 < Time.unscaledTime) {
+            killFeed.Dequeue();
+        }
+    }
 
     public override void Spawned() {
         base.Spawned();
 
         GameManager.Instance.OnMapBootstrapLoaded(this);
+        ActiveInstance = this;
         SpawnOwnPlayer();
     }
 
@@ -64,6 +82,27 @@ public class MapInstance : NetworkBehaviour {
         }
     }
 
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_ReportKill(PlayerRef killedPlayer, RpcInfo info = default) {
+        Debug.Log($"{info.Source} reported a kill");
+
+        // Add fluff for everyone
+        killFeed.Enqueue(new KillFeedEntry() {
+            message = $"Hello World! {info.Source} -> {killedPlayer}",
+            time = Time.unscaledTime,
+        });
+
+        // Set the logical kill on master client only
+        if (Runner.IsSharedModeMasterClient) {
+            if (!kills.TryGet(info.Source, out int killCount)) {
+                killCount = 0;
+            }
+
+            killCount++;
+            kills.Set(info.Source, killCount);
+        }
+    }
+
     protected virtual void UpdatePreGame() {
         if (currentStateTimer.Expired(Runner)) {
             Debug.Log("Starting Game...");
@@ -76,11 +115,20 @@ public class MapInstance : NetworkBehaviour {
     }
 
     protected virtual void UpdateMidGame() {
-        if (currentStateTimer.Expired(Runner)) {
+        var killTargetReached = false;
+        foreach ((PlayerRef player, int count) in kills) {
+            Debug.Log(count);
+            if (count >= killGoal) {
+                killTargetReached = true;
+                break;
+            }
+        }
+
+        if (currentStateTimer.Expired(Runner) || killTargetReached) {
             Debug.Log("Ending Game...");
 
             currentState = GameState.PostGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 20);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 10);
         }
     }
 
