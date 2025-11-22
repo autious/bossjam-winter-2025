@@ -91,6 +91,16 @@ public class MapInstance : NetworkBehaviour {
             message = $"Hello World! {info.Source} -> {killedPlayer}",
             time = Time.unscaledTime,
         });
+
+        // Set the logical kill on master client only
+        if (Runner.IsSharedModeMasterClient) {
+            if (!kills.TryGet(info.Source, out int killCount)) {
+                killCount = 0;
+            }
+
+            killCount++;
+            kills.Set(info.Source, killCount);
+        }
     }
 
     protected virtual void UpdatePreGame() {
