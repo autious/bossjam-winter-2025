@@ -5577,7 +5577,7 @@ MonoBehaviour:
   enableJumping: 1
   coyoteTime: 0.2
   charAnim: {fileID: 8662060857718786850}
-  headModel: {fileID: 497725415952791333}
+  charModel: {fileID: 8853367196310777984}
   tiltAmount: 0.18
   tiltLerpSpeed: 9
   playerVoice: {fileID: 8858752790860349707}
@@ -5655,17 +5655,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio: {fileID: 3459575748352701396}
-  minDelayBetweenVoicelines: 5
+  minDelayBetweenVoicelines: 15
   voiceLines:
   - triggerEvent: 5
     clip:
     - {fileID: 8300000, guid: cefb92aa978a27f42bc2fcdd8c8a5430, type: 3}
     - {fileID: 8300000, guid: 2fd5d38caed8fcb43979587ebd39a7e3, type: 3}
-    chance: 0.1
+    - {fileID: 8300000, guid: cc67dd3aa1ddf8b45ac5d3b9f8391016, type: 3}
+    chance: 0.059
   - triggerEvent: 4
     clip:
-    - {fileID: 8300000, guid: cc67dd3aa1ddf8b45ac5d3b9f8391016, type: 3}
-    chance: 0.1
+    - {fileID: 8300000, guid: 80199423fa774264db1e6ca6edf80070, type: 3}
+    chance: 0.03
 --- !u!1 &6839643051927724530
 GameObject:
   m_ObjectHideFlags: 0
@@ -6085,7 +6086,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8566483678686039712}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -6392,12 +6393,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5187586265064130257}
   m_SourcePrefab: {fileID: 100100000, guid: 125a913ee0349534f8fcd2954fdc8fc7, type: 3}
---- !u!1 &497725415952791333 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2547416949023509550, guid: 125a913ee0349534f8fcd2954fdc8fc7,
-    type: 3}
-  m_PrefabInstance: {fileID: 2716366115475798795}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3704432536331374639 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1646823591829433124, guid: 125a913ee0349534f8fcd2954fdc8fc7,
