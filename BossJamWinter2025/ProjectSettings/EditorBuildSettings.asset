@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameplayScenes/CylinderGameplayScene.unity
     guid: 90ae7ae02ee6a774ba39504ecdfb13a2
+  - enabled: 1
+    path: Assets/Scenes/GameplayScenes/OfficeSpace.unity
+    guid: 5762f25c029936445a4ca011d223bedd
+  - enabled: 1
+    path: Assets/Scenes/GameplayScenes/DoomTypeLevel.unity
+    guid: 41daa36a9827c61499fb98c25f1a1915
   m_configObjects: {}

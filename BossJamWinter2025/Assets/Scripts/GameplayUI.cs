@@ -17,7 +17,7 @@ public class GameplayUI : MonoBehaviour {
         }
 
         roundTimer.enabled = MapInstance.ActiveInstance != null;
-        if (map != null) {
+        if (map != null && map.Object != null && map.Object.IsValid) {
             switch (map.currentState) {
                 case GameState.PreGame:
                     roundTimer.text = $"Starting: {map.currentStateTimer.RemainingTime(GameManager.Instance.runner):0.}s";

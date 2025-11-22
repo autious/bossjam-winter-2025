@@ -32,15 +32,11 @@ public class PlayerVoiceLines : NetworkBehaviour {
 
 
     public void TryPlayEvent(VoiceEvent voiceEvent) {
-        Debug.Log("ccc");
         for (int eventIndex = 0; eventIndex < voiceLines.Count; eventIndex++) {
-            Debug.Log($"ccc #{eventIndex}");
             VoiceLine line = voiceLines[eventIndex];
             if (line.triggerEvent == voiceEvent) {
                 bool canPlayClip = Random.Range(0f, 1f) <= line.chance;
-                Debug.Log($"ddddd FOUND EVENT!! #{eventIndex} - Lucky? {canPlayClip}, timer{lastVoicePlayedEvent < Time.time}");
                 if (lastVoicePlayedEvent < Time.time && canPlayClip) {
-                    Debug.Log($"eeeeeee canPlay #{eventIndex}");
                     lastVoicePlayedEvent = Time.time + minDelayBetweenVoicelines;
                     int clipIndex = Random.Range(0, line.clip.Count);
                     RPC_PlayVoiceLine(eventIndex,clipIndex);

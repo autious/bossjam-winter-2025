@@ -30,6 +30,19 @@ public class MapInstance : NetworkBehaviour {
 
     public NetworkObject playerPrefab;
 
+    protected void Update() {
+        // We likely don't have authority over this object, so we cannot do this in `FixedUpdateNetwork`
+        if (Object == null || !Object.IsValid) {
+            return;
+        }
+
+        // Check if we need to respawn // TODO this should be in MidGame update, but since that is sectioned off for StateAuthority, we have it here for now
+        var allPlayers = GameObject.FindObjectsOfType<QuickPlayerController>();
+        if (!allPlayers.Any((x) => x.HasStateAuthority)) {
+            SpawnOwnPlayer();
+        }
+    }
+
     public override void Spawned() {
         base.Spawned();
 
@@ -85,24 +98,16 @@ public class MapInstance : NetworkBehaviour {
     public override void FixedUpdateNetwork() {
         base.FixedUpdateNetwork();
 
-        // Check if we need to respawn // TODO this should be in MidGame update, but since that is sectioned off for StateAuthority, we have it here for now
-        var allPlayers = GameObject.FindObjectsOfType<QuickPlayerController>();
-        if (!allPlayers.Any((x) => x.HasStateAuthority)) {
-            SpawnOwnPlayer();
-        }
-
-        if (HasStateAuthority) {
-            switch (currentState) {
-                case GameState.PreGame:
-                    UpdatePreGame();
-                    break;
-                case GameState.MidGame:
-                    UpdateMidGame();
-                    break;
-                case GameState.PostGame:
-                    UpdatePostGame();
-                    break;
-            }
+        switch (currentState) {
+            case GameState.PreGame:
+                UpdatePreGame();
+                break;
+            case GameState.MidGame:
+                UpdateMidGame();
+                break;
+            case GameState.PostGame:
+                UpdatePostGame();
+                break;
         }
     }
 
