@@ -35,6 +35,11 @@ public class QuickPlayerController : NetworkBehaviour
     Vector3 tiltVector;
     float mx, my;
 
+    private void Awake() {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     bool GroundCheck()
     {
         bool _result = Physics.CheckSphere(transform.position + new Vector3(0, col.radius - 0.1f, 0), col.radius - 0.05f, collisionLayer);
