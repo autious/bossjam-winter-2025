@@ -4,15 +4,17 @@ using UnityEngine;
 using Fusion;
 using System.Linq;
 
-enum GameState {
+public enum GameState {
     PreGame,
     MidGame,
     PostGame,
 }
 
 public class MapInstance : NetworkBehaviour {
-    [Networked] private GameState currentState { get; set; } = GameState.PreGame;
-    [Networked] private TickTimer currentStateTimer { get; set; }
+    public static MapInstance ActiveInstance { get; private set; }
+
+    [Networked] public GameState currentState { get; private set; } = GameState.PreGame;
+    [Networked] public TickTimer currentStateTimer { get; private set; }
 
     [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
     [Networked] private int killGoal { get; set; } = 5;
@@ -23,6 +25,7 @@ public class MapInstance : NetworkBehaviour {
         base.Spawned();
 
         GameManager.Instance.OnMapBootstrapLoaded(this);
+        ActiveInstance = this;
         SpawnOwnPlayer();
     }
 

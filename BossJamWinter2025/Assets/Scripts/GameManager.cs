@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     public static GameManager Instance { get; private set; }
 
-    private NetworkRunner runner;
+    public NetworkRunner runner;
     private string roomIdentifier = "test_room";
 
     public string[] gameplayScenePaths;
