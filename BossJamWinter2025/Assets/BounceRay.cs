@@ -42,7 +42,11 @@ public class BounceRay : MonoBehaviour
     [Button("Shoot")]
     private void ShootDebug()
     {
-        Shoot(transform.position, false);
+        shotLineRenderer.gameObject.SetActive(true);
+        previewLineRenderer.gameObject.SetActive(false);
+        Recalc();
+        line_segment[0] = transform.position;
+        StartCoroutine(ShootCoroutine(true,false));
     }
 
     public void Shoot(Vector3 gunFirePoint, bool cosmetic)
@@ -51,7 +55,7 @@ public class BounceRay : MonoBehaviour
         previewLineRenderer.gameObject.SetActive(false);
         Recalc();
         line_segment[0] = gunFirePoint;
-        StartCoroutine(ShootCoroutine(cosmetic));
+        StartCoroutine(ShootCoroutine(cosmetic,true));
     }
 
     public void Preview()
@@ -67,7 +71,7 @@ public class BounceRay : MonoBehaviour
     public float bulletSpeed = 100.0f;
     public float trailingLength = 100.0f;
 
-    private IEnumerator ShootCoroutine(bool cosmetic) {
+    private IEnumerator ShootCoroutine(bool cosmetic, bool  destroy_when_done) {
         if(Application.isPlaying) {
             float timeStart = Time.time;
             int trailing_index = 0;
@@ -124,8 +128,10 @@ public class BounceRay : MonoBehaviour
 
                 yield return null;
             }
+            if(destroy_when_done) {
+                Destroy(gameObject);
+            }
         }
-        //Instantiate(hitEffect, hit.point, Quaternion.identity);
     }
 
     public void UpdateLines()
