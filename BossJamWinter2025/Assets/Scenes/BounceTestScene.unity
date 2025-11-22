@@ -863,6 +863,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: BounceRaySource
       objectReference: {fileID: 0}
+    - target: {fileID: 2538663364423986090, guid: 25caa90010e7f7144bc91888fab3f42b,
+        type: 3}
+      propertyPath: shot_bounce_limit
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 2538663364423986090, guid: 25caa90010e7f7144bc91888fab3f42b,
+        type: 3}
+      propertyPath: laser_bounce_limit
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 8885151028093527010, guid: 25caa90010e7f7144bc91888fab3f42b,
         type: 3}
       propertyPath: m_LocalPosition.x

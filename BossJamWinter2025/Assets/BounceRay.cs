@@ -22,7 +22,8 @@ public class BounceRay : MonoBehaviour
 
     int MAX_BOUNCE = 0;
     int hit_count = 0;
-    bool hit_player = true;
+    bool hit_player = false;
+    bool out_of_bounds = false;
     Hittable hitPlayer;
 
     Vector3[] line_segment = null;
@@ -33,12 +34,21 @@ public class BounceRay : MonoBehaviour
         shotLineRenderer.gameObject.SetActive(false);
         previewLineRenderer.gameObject.SetActive(false);
 
-        MAX_BOUNCE = Math.Max(shot_bounce_limit, laser_bounce_limit)+2;
-
-        line_segment = new Vector3[MAX_BOUNCE+1];
-        distances = new float[MAX_BOUNCE+1];
-        ray_sequence = new Ray[MAX_BOUNCE+1];
+        Realloc();
     }
+
+    private void Realloc(){
+        int NEW_MAX_BOUNCE = Math.Max(shot_bounce_limit, laser_bounce_limit)+2;
+
+        if(NEW_MAX_BOUNCE > MAX_BOUNCE) {
+            MAX_BOUNCE  = NEW_MAX_BOUNCE;
+            line_segment = new Vector3[MAX_BOUNCE+1];
+            distances = new float[MAX_BOUNCE+1];
+            ray_sequence = new Ray[MAX_BOUNCE+1];
+        }
+    }
+
+
 
     private void OnDrawGizmos()
     {
@@ -128,7 +138,7 @@ public class BounceRay : MonoBehaviour
                         if(hitPlayer != null) {
                             hitPlayer.OnHit(line_segment[bullet_index], Vector3.zero, cosmetic);
                         }
-                    } else {
+                    } else if(out_of_bounds) {
                         Instantiate(hitSoundMiss, line_segment[bullet_index], Quaternion.identity);
                     }
                     bullet_index++;
@@ -154,11 +164,13 @@ public class BounceRay : MonoBehaviour
     [Button("Recalc")]
     public void Recalc()
     {
+        Realloc();
         ray_sequence[0] = new Ray(transform.position, transform.forward);
         line_segment[0] = transform.position;
         hit_count = 0;
         distances[0] = 0.0f;
         hit_player = false;
+        out_of_bounds = false;
 
         for(int i = 0; i < MAX_BOUNCE; i++) {
             Ray ray = ray_sequence[i];
@@ -205,6 +217,7 @@ public class BounceRay : MonoBehaviour
             }
             else
             {
+                out_of_bounds = true;
                 hit_count = i+1;
                 distances[i+1] = distances[i] + 10.0f;
                 line_segment[i+1] = ray.origin + ray.direction * 100.0f;
