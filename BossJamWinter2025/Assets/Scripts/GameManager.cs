@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     private string roomIdentifier = "default_room";
     private string initialPlayerName = "default_player";
 
+    public Queue<FeedEntry> feed = new();
+
     public string[] gameplayScenePaths;
 
     public NetworkPlayerData networkPlayerDataPrefab;
@@ -43,6 +45,13 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     protected void Start() {
         uiRoomInput.text = roomIdentifier;
         uiPlayerName.text = initialPlayerName;
+    }
+
+    protected void Update() {
+        // Remove old items from the feed
+        while (feed.TryPeek(out var entry) && entry.time + 5 < Time.unscaledTime) {
+            feed.Dequeue();
+        }
     }
 
     public async void StartGame() {
