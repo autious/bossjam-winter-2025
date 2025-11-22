@@ -14,17 +14,29 @@ public class BounceRay : MonoBehaviour
     public GameObject hitSoundEffectPlayer;
     public GameObject hitSoundMiss;
 
+    public float bulletSpeed = 100.0f;
+    public float trailingLength = 100.0f;
+    public int shot_bounce_limit = 8;
+    public int laser_bounce_limit = 5;
+
+    int MAX_BOUNCE = 0;
     int hit_count = 0;
     bool hit_player = true;
     Hittable hitPlayer;
-    int MAX_BOUNCE = 64;
-    Vector3[] line_segment = new Vector3[65];
-    float[] distances = new float[65];
-    Ray[] ray_sequence = new Ray[65];
+
+    Vector3[] line_segment = null;
+    float[] distances = null;
+    Ray[] ray_sequence = null;
 
     private void Awake() {
         shotLineRenderer.gameObject.SetActive(false);
         previewLineRenderer.gameObject.SetActive(false);
+
+        MAX_BOUNCE = Math.Max(shot_bounce_limit, laser_bounce_limit);
+
+        line_segment = new Vector3[MAX_BOUNCE+1];
+        distances = new float[MAX_BOUNCE+1];
+        ray_sequence = new Ray[MAX_BOUNCE+1];
     }
 
     private void OnDrawGizmos()
@@ -70,8 +82,6 @@ public class BounceRay : MonoBehaviour
         }
     }
 
-    public float bulletSpeed = 100.0f;
-    public float trailingLength = 100.0f;
 
     private IEnumerator ShootCoroutine(bool cosmetic, bool  destroy_when_done) {
         if(Application.isPlaying) {
@@ -147,7 +157,7 @@ public class BounceRay : MonoBehaviour
 
         for(int i = 0; i < MAX_BOUNCE; i++) {
             Ray ray = ray_sequence[i];
-            int num_hits = Physics.RaycastNonAlloc(ray, hits, 10000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
+            int num_hits = Physics.RaycastNonAlloc(ray, hits, 10000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint", "HitConsume"));
             //int num_hits = Physics.SphereCastNonAlloc(ray, 0.25f, hits, 1000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
 
             if (num_hits > 0) {
@@ -177,10 +187,12 @@ public class BounceRay : MonoBehaviour
                     hitPlayer = hit.collider.gameObject.GetComponent<Hittable>();
                     break;
                 } else {
-                    Debug.LogWarning($"Ignored Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
+                    if(hit.collider.gameObject.layer != 6) {
+                        Debug.LogWarning($"Ignored Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
+                    }
                     hit_count = i+1;
-                    distances[i+1] = distances[i] + 10.0f;
-                    line_segment[i+1] = ray.origin + ray.direction * 100.0f;
+                    distances[i+1] = distances[i] + hit.distance;
+                    line_segment[i+1] = ray.origin + ray.direction * hit.distance;
                     break;
                 }
             }

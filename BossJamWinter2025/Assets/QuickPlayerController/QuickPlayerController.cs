@@ -30,9 +30,10 @@ public class QuickPlayerController : NetworkBehaviour
     Vector3 inputMotion, controlMotion, finalMotion;
     bool isGrounded = true;
 
-    [Header("Camera Settings.")] 
+    [Header("Camera Settings.")]
     [SerializeField] CharacterAnimation charAnim;
     [SerializeField] GameObject charModel;
+    [SerializeField] GameObject headModel;
     [SerializeField] float tiltAmount = 10;
     [SerializeField] float tiltLerpSpeed = 10;
     Vector3 tiltVector;
@@ -61,11 +62,12 @@ public class QuickPlayerController : NetworkBehaviour
         bool _result = Physics.CheckSphere(transform.position + new Vector3(0, col.radius - 0.1f, 0), col.radius - 0.05f, collisionLayer);
         return _result;
     }
-    
+
     public override void Spawned()
     {
         camThingy.SetActive(HasStateAuthority);
-        charModel.SetActive(HasStateAuthority == false);
+        //charModel.SetActive(HasStateAuthority == false);
+        headModel.SetActive(HasStateAuthority == false);
     }
 
     Vector3 posLastFrame = Vector3.zero;
@@ -129,12 +131,12 @@ public class QuickPlayerController : NetworkBehaviour
         gunCdTimer -= Time.deltaTime;
         if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
             gunCdTimer = gunCooldown;
-            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position, logicalFirePoint.rotation, gunFirePoint.position);
+            playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position + transform.forward * 0.3f, logicalFirePoint.rotation, gunFirePoint.position);
             playerVoice.TryPlayEvent(PlayerVoiceLines.VoiceEvent.OnShotGun);
         }
 
         if(Input.GetMouseButtonDown(1)) {
-            laser = Instantiate(laserPrefab,logicalFirePoint.position, logicalFirePoint.rotation, logicalFirePoint.transform).GetComponent<BounceRay>();
+            laser = Instantiate(laserPrefab,logicalFirePoint.position + transform.forward * 0.3f, logicalFirePoint.rotation, logicalFirePoint.transform).GetComponent<BounceRay>();
             laser.Preview(gunFirePoint.position);
         }
         if(Input.GetMouseButton(1)) {
@@ -235,7 +237,7 @@ public class QuickPlayerController : NetworkBehaviour
         head.localEulerAngles = new Vector3(0, mx, 0);
         cam.localEulerAngles = new Vector3(my - tiltVector.y, 0, -tiltVector.x);
     }
-    
+
     public void KillPlayer() {
         MapInstance.ActiveInstance.RPC_ReportKill(Object.StateAuthority);
     }
