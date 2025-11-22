@@ -182,8 +182,10 @@ public class QuickPlayerController : NetworkBehaviour
             }
         }
         if(Input.GetMouseButtonUp(1)) {
-            Destroy(laser.gameObject);
-            laser = null;
+            if(laser != null) {
+                Destroy(laser.gameObject);
+                laser = null;
+            }
         }
     }
 
