@@ -26,7 +26,7 @@ public class MapInstance : NetworkBehaviour {
     [Networked] public GameState currentState { get; private set; } = GameState.PreGame;
     [Networked] public TickTimer currentStateTimer { get; private set; }
 
-    [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
+    [Networked] [Capacity(16)] public NetworkDictionary<PlayerRef, int> kills => default;
     [Networked] private int killGoal { get; set; } = 5;
 
     public NetworkObject playerPrefab;
