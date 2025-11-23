@@ -5812,7 +5812,7 @@ MonoBehaviour:
   camThingy: {fileID: 6839643052924768986}
   airControl: 1
   moveSpeed: 100
-  maxSpeed: 10
+  maxSpeed: 8
   maxAirWishSpeed: 12
   airAcceleration: 150
   gravity: 32
