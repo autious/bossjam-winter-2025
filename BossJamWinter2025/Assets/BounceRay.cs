@@ -179,7 +179,7 @@ public class BounceRay : MonoBehaviour
         }
     }
 
-    bool RayHitsPlayer(Ray ray) {
+    bool RayHitsPlayer(float max_width, Ray ray, Ray forward) {
         RaycastHit[] hits = new RaycastHit[8];
         int num_hits = Physics.RaycastNonAlloc(ray, hits, 10000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint", "HitConsume"));
         //int num_hits = Physics.SphereCastNonAlloc(ray, 0.25f, hits, 1000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
@@ -194,7 +194,14 @@ public class BounceRay : MonoBehaviour
                 }
             }
 
-            return hit.collider.gameObject.layer == 10;
+            if(hit.collider.gameObject.layer == 10) {
+                Vector3 localPoint = hit.point - forward.origin;
+                float t  = Vector3.Dot(localPoint, forward.direction);
+                Vector3 lineProjectedPoint = forward.GetPoint(t);
+                if(Vector3.Distance(hit.point, lineProjectedPoint) < max_width){
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -237,7 +244,7 @@ public class BounceRay : MonoBehaviour
                     //Try so extra angles for fun and see if we can find a player.
                     for(int a = -8; a < 9; a++) {
                         Vector3 out_vector_candidate = Quaternion.AngleAxis(0.5f*a, Vector3.up) * out_vector;
-                        if(RayHitsPlayer(new Ray(hit.point + hit.normal * 0.01f + out_vector * 0.01f, out_vector_candidate))){
+                        if(RayHitsPlayer(2.0f, new Ray(hit.point + hit.normal * 0.01f + out_vector * 0.01f, out_vector_candidate), new Ray(hit.point, out_vector))) {
                             out_vector = out_vector_candidate;
                             break;
                         }
