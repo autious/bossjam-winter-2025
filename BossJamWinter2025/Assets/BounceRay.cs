@@ -228,8 +228,8 @@ public class BounceRay : MonoBehaviour
                     Vector3 out_vector = Vector3.Reflect(ray.direction, hit.normal);
 
                     //Try so extra angles for fun and see if we can find a player.
-                    for(int a = -2; a < 3; a++) {
-                        Vector3 out_vector_candidate = Quaternion.AngleAxis(2.0f*a, Vector3.up) * out_vector;
+                    for(int a = -4; a < 5; a++) {
+                        Vector3 out_vector_candidate = Quaternion.AngleAxis(1.0f*a, Vector3.up) * out_vector;
                         if(RayHitsPlayer(new Ray(hit.point + hit.normal * 0.01f + out_vector * 0.01f, out_vector_candidate))){
                             out_vector = out_vector_candidate;
                             break;
