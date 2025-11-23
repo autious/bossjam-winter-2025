@@ -26,7 +26,7 @@ public class MapInstance : NetworkBehaviour {
     [Networked] public GameState currentState { get; private set; } = GameState.PreGame;
     [Networked] public TickTimer currentStateTimer { get; private set; }
 
-    [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
+    [Networked] [Capacity(16)] public NetworkDictionary<PlayerRef, int> kills => default;
     [Networked] private int killGoal { get; set; } = 5;
 
     public NetworkObject playerPrefab;
@@ -115,10 +115,18 @@ public class MapInstance : NetworkBehaviour {
 
         // Add feed fluff
         var feedColor = isLocalPlayerInvolved ? "#ae0c01ff" : "#f3fcf3ff";
-        GameManager.Instance.feed.Enqueue(new FeedEntry() {
-            message = $"<color={feedColor}><b>{killer.playerName}</b> killed <b>{killee.playerName}</b></color>",
-            time = Time.unscaledTime,
-        });
+
+        if (killedPlayer == info.Source) {
+            GameManager.Instance.feed.Enqueue(new FeedEntry() {
+                message = $"<color={feedColor}><b>{killer.playerName}</b> killed themselves</color>",
+                time = Time.unscaledTime,
+            });
+        } else {
+            GameManager.Instance.feed.Enqueue(new FeedEntry() {
+                message = $"<color={feedColor}><b>{killer.playerName}</b> killed <b>{killee.playerName}</b></color>",
+                time = Time.unscaledTime,
+            });
+        }
 
         // Set the logical kill on master client only
         if (Runner.IsSharedModeMasterClient) {
@@ -126,7 +134,11 @@ public class MapInstance : NetworkBehaviour {
                 killCount = 0;
             }
 
-            killCount++;
+            if (killedPlayer == info.Source) {
+                killCount--;
+            } else {
+                killCount++;
+            }
             kills.Set(info.Source, killCount);
         }
     }
