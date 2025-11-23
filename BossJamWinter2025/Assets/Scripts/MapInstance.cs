@@ -94,7 +94,7 @@ public class MapInstance : NetworkBehaviour {
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_ReportKill(PlayerRef killedPlayer, RpcInfo info = default) {
         // Ignore kills that are done outside game time
-        if (currentState == GameState.MidGame) {
+        if (currentState != GameState.MidGame) {
             return;
         }
 
