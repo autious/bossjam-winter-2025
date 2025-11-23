@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System;
+using System.Linq;
+using UnityEngine.UIElements;
 
 public static class NameGenerator {
     // Shamelessly stolen from https://gist.github.com/borlaym/585e2e09dd6abd9b0d0a
@@ -92,9 +94,9 @@ public static class NameGenerator {
     public static string Generate(int adjectiveCount = 1) {
         string output = "";
         for (int i = 0; i < adjectiveCount; i++) {
-            output += adjectives.GetRandom() + " ";
+            output += adjectives.Where((x) => x.Length <= 5).ToList().GetRandom() + " ";
         }
-        output += animals.GetRandom();
+        output += animals.Where((x) => x.Length <= 5).ToList().GetRandom();
         return output;
     }
 }
