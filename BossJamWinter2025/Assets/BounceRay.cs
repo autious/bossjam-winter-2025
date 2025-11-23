@@ -82,9 +82,16 @@ public class BounceRay : MonoBehaviour
         StartCoroutine(ShootCoroutine(cosmetic,true));
     }
 
-    public void Preview(Vector3 gunFirePoint)
+    public void Preview(Vector3 gunFirePoint, Color missColor, Color hitColor)
     {
         Recalc();
+        if(hit_player) {
+            previewLineRenderer.startColor = hitColor;
+            previewLineRenderer.endColor = hitColor;
+        } else {
+            previewLineRenderer.startColor = missColor;
+            previewLineRenderer.endColor = missColor;
+        }
         shotLineRenderer.gameObject.SetActive(false);
         previewLineRenderer.gameObject.SetActive(true);
         previewLineRenderer.positionCount = Math.Min(laser_bounce_limit + 2, hit_count + 1);

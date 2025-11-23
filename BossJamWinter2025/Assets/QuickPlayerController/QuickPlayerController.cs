@@ -184,7 +184,7 @@ public class QuickPlayerController : NetworkBehaviour
             // laser.Preview(gunFirePoint.position);
         }
 
-        laser.Preview(gunFirePoint.position);
+        laser.Preview(gunFirePoint.position, Color.green, Color.red);
 
         // if(Input.GetMouseButtonUp(1)) {
         //     Destroy(laser.gameObject);
