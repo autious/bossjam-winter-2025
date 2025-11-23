@@ -26,8 +26,8 @@ public class MapInstance : NetworkBehaviour {
     [Networked] public GameState currentState { get; private set; } = GameState.PreGame;
     [Networked] public TickTimer currentStateTimer { get; private set; }
 
-    [Networked] [Capacity(16)] private NetworkDictionary<PlayerRef, int> kills => default;
-    [Networked] private int killGoal { get; set; } = 5;
+    [Networked] [Capacity(16)] public NetworkDictionary<PlayerRef, int> kills => default;
+    [Networked] private int killGoal { get; set; } = 10;
 
     public NetworkObject playerPrefab;
 
@@ -68,7 +68,7 @@ public class MapInstance : NetworkBehaviour {
 
     public void StartRound() {
         currentState = GameState.PreGame;
-        currentStateTimer = TickTimer.CreateFromSeconds(Runner, 4);
+        currentStateTimer = TickTimer.CreateFromSeconds(Runner, 8);
         kills.Clear();
         killGoal = 2;
 
@@ -93,6 +93,11 @@ public class MapInstance : NetworkBehaviour {
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_ReportKill(PlayerRef killedPlayer, RpcInfo info = default) {
+        // Ignore kills that are done outside game time
+        if (currentState != GameState.MidGame) {
+            return;
+        }
+
         bool isLocalPlayerInvolved = killedPlayer == Runner.LocalPlayer || info.Source == Runner.LocalPlayer;
 
         // Gather some data
@@ -115,10 +120,18 @@ public class MapInstance : NetworkBehaviour {
 
         // Add feed fluff
         var feedColor = isLocalPlayerInvolved ? "#ae0c01ff" : "#f3fcf3ff";
-        GameManager.Instance.feed.Enqueue(new FeedEntry() {
-            message = $"<color={feedColor}><b>{killer.playerName}</b> killed <b>{killee.playerName}</b></color>",
-            time = Time.unscaledTime,
-        });
+
+        if (killedPlayer == info.Source) {
+            GameManager.Instance.feed.Enqueue(new FeedEntry() {
+                message = $"<color={feedColor}><b>{killer.playerName}</b> killed themselves</color>",
+                time = Time.unscaledTime,
+            });
+        } else {
+            GameManager.Instance.feed.Enqueue(new FeedEntry() {
+                message = $"<color={feedColor}><b>{killer.playerName}</b> killed <b>{killee.playerName}</b></color>",
+                time = Time.unscaledTime,
+            });
+        }
 
         // Set the logical kill on master client only
         if (Runner.IsSharedModeMasterClient) {
@@ -126,7 +139,11 @@ public class MapInstance : NetworkBehaviour {
                 killCount = 0;
             }
 
-            killCount++;
+            if (killedPlayer == info.Source) {
+                killCount--;
+            } else {
+                killCount++;
+            }
             kills.Set(info.Source, killCount);
         }
     }
@@ -136,9 +153,8 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Starting Game...");
 
             currentState = GameState.MidGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 120);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 60 * 5);
             kills.Clear();
-            killGoal = 5;
         }
     }
 
@@ -155,7 +171,7 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Ending Game...");
 
             currentState = GameState.PostGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 10);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 20);
         }
     }
 

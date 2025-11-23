@@ -17,6 +17,26 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Glow_A
+    second: {fileID: 2100000, guid: 4d7b2207fc648b14399b50445738f248, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glow_B
+    second: {fileID: 2100000, guid: cbe43650e815a854798ddb7b51093c8e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glow_C
+    second: {fileID: 2100000, guid: b7a55512c55f93448b7c55cc9959ed20, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glow_D
+    second: {fileID: 2100000, guid: ef7b3783dbf512743999938104892e9a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Walls
     second: {fileID: 2100000, guid: ce1f185f5af052643bfdd97c21fddbaf, type: 2}
   materials:

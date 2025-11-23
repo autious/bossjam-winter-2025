@@ -111,20 +111,8 @@ public class QuickPlayerController : NetworkBehaviour
         if (GameManager.Instance != null) {
             if (!HasStateAuthority) {
                 // Online player stuff
-                isGrounded = GroundCheck();
-                my = Mathf.Clamp(cam.localEulerAngles.x, -89, 89);
-                Vector3 moveDir = transform.position - posLastFrame;
-                moveDir.y = 0;
-                float move = Vector3.Dot(head.forward, moveDir) >= 0 ? 1 : -1;
-                float strafe = Vector3.Dot(head.right, moveDir) >= 0 ? 1 : -1;
-
-                if (moveDir.magnitude <= 0.05) {
-                    move = 0;
-                    strafe = 0;
-                }
-
-                charAnim.SetValues(move, strafe, my, true);
-                posLastFrame = transform.position;
+                
+                charAnim.SetValues(walk, strafe, 0, true);
                 return;
             }
         }
@@ -184,14 +172,19 @@ public class QuickPlayerController : NetworkBehaviour
             // laser.Preview(gunFirePoint.position);
         }
 
-        laser.Preview(gunFirePoint.position);
+        laser.Preview(gunFirePoint.position, Color.green, Color.red);
 
         // if(Input.GetMouseButtonUp(1)) {
         //     Destroy(laser.gameObject);
         //     laser = null;
         // }
         charAnim.SetValues(0, 0, 0, true);
+        walk = moveY;
+        strafe = moveX;
     }
+
+    [Networked] [SerializeField] public float walk {get;set;}
+    [Networked] [SerializeField] public float strafe {get;set;}
 
 
     void FixedUpdate(){

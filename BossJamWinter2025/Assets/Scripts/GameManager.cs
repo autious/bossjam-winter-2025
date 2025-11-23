@@ -45,6 +45,10 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     protected void Start() {
         uiRoomInput.text = roomIdentifier;
         uiPlayerName.text = initialPlayerName;
+
+        // Unlock the cursor should we get here again due to disconnects
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     protected void Update() {
@@ -80,7 +84,7 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
         var sceneIndex = SceneUtility.GetBuildIndexByScenePath(gameplayScenePaths.GetRandom());
         Debug.Assert(sceneIndex >= 0, "Failed getting scene from path, possibly forgot to add it to the build scene list");
 
-        runner.LoadScene(SceneRef.FromIndex(4), LoadSceneMode.Single);
+        runner.LoadScene(SceneRef.FromIndex(sceneIndex), LoadSceneMode.Single);
     }
 
     public void OnMapBootstrapLoaded(MapInstance mapBootstrap) {
