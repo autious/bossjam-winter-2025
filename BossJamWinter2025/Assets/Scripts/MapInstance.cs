@@ -59,7 +59,7 @@ public class MapInstance : NetworkBehaviour {
     }
 
     public IEnumerator RespawnCoroutine() {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
 
         yield return Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
         yield return new WaitForSeconds(2);
