@@ -49,18 +49,31 @@ public class GameplayUI : MonoBehaviour {
 
 
         roundTimer.enabled = MapInstance.ActiveInstance != null;
+        scoreboard.enabled = MapInstance.ActiveInstance != null;
         if (map != null && map.Object != null && map.Object.IsValid) {
+            var time = map.currentStateTimer.RemainingTime(GameManager.Instance.runner).GetValueOrDefault(0);
+            var mins = Mathf.FloorToInt(time / 60.0f);
+            var sec = Mathf.FloorToInt(time % 60.0f);
+            var timeString = $"{mins:00.}:{sec:00.}";
+
             switch (map.currentState) {
                 case GameState.PreGame:
-                    roundTimer.text = $"Starting: {map.currentStateTimer.RemainingTime(GameManager.Instance.runner):0.}s";
+                    roundTimer.text = $"Starting: {timeString}";
                     break;
                 case GameState.MidGame:
-                    roundTimer.text = $"{map.currentStateTimer.RemainingTime(GameManager.Instance.runner):0.}s";
+                    roundTimer.text = $"{timeString}";
                     break;
                 case GameState.PostGame:
-                    roundTimer.text = $"Ending: {map.currentStateTimer.RemainingTime(GameManager.Instance.runner):0.}s";
+                    roundTimer.text = $"Ending: {timeString}";
                     break;
             }
+
+            scoreboard.text = string.Join("\n", map.kills.Select((x) => {
+                if (NetworkPlayerData.TryGet(out NetworkPlayerData data, x.Key)) {
+                    return $"{data.playerName}: {x.Value}";
+                }
+                return $"Unknown: {x.Value}";
+            }));
         }
 
         feed.enabled = GameManager.Instance != null;
