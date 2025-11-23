@@ -5950,8 +5950,8 @@ MonoBehaviour:
   charAnim: {fileID: 7612790765858433553}
   charModel: {fileID: 1843519828467074930}
   headModel: {fileID: 7464643646624383278}
-  tiltAmount: 0.5
-  tiltLerpSpeed: 5
+  tiltAmount: 0.75
+  tiltLerpSpeed: 3
   playerVoice: {fileID: 8858752790860349707}
   playerGun: {fileID: 8457962913741600308}
   gunFirePoint: {fileID: 238733864552373479}
