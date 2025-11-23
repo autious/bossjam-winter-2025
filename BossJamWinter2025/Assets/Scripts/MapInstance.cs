@@ -68,7 +68,7 @@ public class MapInstance : NetworkBehaviour {
 
     public void StartRound() {
         currentState = GameState.PreGame;
-        currentStateTimer = TickTimer.CreateFromSeconds(Runner, 4);
+        currentStateTimer = TickTimer.CreateFromSeconds(Runner, 8);
         kills.Clear();
         killGoal = 2;
 
@@ -148,7 +148,7 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Starting Game...");
 
             currentState = GameState.MidGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 120);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 60 * 5);
             kills.Clear();
             killGoal = 5;
         }
@@ -167,7 +167,7 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Ending Game...");
 
             currentState = GameState.PostGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 10);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 20);
         }
     }
 
