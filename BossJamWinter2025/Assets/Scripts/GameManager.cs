@@ -45,6 +45,10 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     protected void Start() {
         uiRoomInput.text = roomIdentifier;
         uiPlayerName.text = initialPlayerName;
+
+        // Unlock the cursor should we get here again due to disconnects
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     protected void Update() {
