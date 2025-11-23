@@ -13,6 +13,7 @@ public class BounceRay : MonoBehaviour
     public GameObject hitEffect;
     public GameObject hitSoundEffect;
     public GameObject hitSoundEffectPlayer;
+    public GameObject hitVisualEffectPlayer;
     public GameObject hitSoundMiss;
 
     public float bulletSpeed = 100.0f;
@@ -29,6 +30,7 @@ public class BounceRay : MonoBehaviour
 
     Vector3[] line_segment = null;
     float[] distances = null;
+    Quaternion[] point_orientation = null;
     Ray[] ray_sequence = null;
 
     private void Awake() {
@@ -46,6 +48,7 @@ public class BounceRay : MonoBehaviour
             line_segment = new Vector3[MAX_BOUNCE+1];
             distances = new float[MAX_BOUNCE+1];
             ray_sequence = new Ray[MAX_BOUNCE+1];
+            point_orientation = new Quaternion[MAX_BOUNCE+1];
         }
     }
 
@@ -144,6 +147,7 @@ public class BounceRay : MonoBehaviour
                         Instantiate(hitSoundEffect, line_segment[bullet_index], Quaternion.identity);
 
                     } else if(hit_player) {
+                        Instantiate(hitVisualEffectPlayer, line_segment[bullet_index], point_orientation[bullet_index]);
                         Instantiate(hitSoundEffectPlayer, line_segment[bullet_index], Quaternion.identity);
                         if(hitPlayer != null) {
                             hitPlayer.OnHit(line_segment[bullet_index], Vector3.zero, cosmetic);
@@ -177,6 +181,7 @@ public class BounceRay : MonoBehaviour
         Realloc();
         ray_sequence[0] = new Ray(transform.position, transform.forward);
         line_segment[0] = transform.position;
+        point_orientation[0] = transform.rotation;
         hit_count = 0;
         distances[0] = 0.0f;
         hit_player = false;
@@ -207,12 +212,14 @@ public class BounceRay : MonoBehaviour
                     max_dist = distances[i+1];
                     ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f + out_vector * 0.01f, out_vector);
                     line_segment[i+1] = hit.point + hit.normal * 0.01f;
+                    point_orientation[i+1] = Quaternion.FromToRotation(Vector3.forward, hit.normal);
                 } else if(hit.collider.gameObject.layer == 10) {
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
                     max_dist = distances[i+1];
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
                     ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f, Vector3.zero);
+                    point_orientation[i+1] = Quaternion.FromToRotation(Vector3.forward, hit.normal);
                     hit_player = true;
                     hitPlayer = hit.collider.gameObject.GetComponent<Hittable>();
                     break;
@@ -226,6 +233,7 @@ public class BounceRay : MonoBehaviour
                     max_dist = distances[i+1];
                     line_segment[i+1] = ray.origin + ray.direction * hit.distance;
                     ray_sequence[i+1] = new Ray(hit.point + hit.normal * 0.01f, Vector3.zero);
+                    point_orientation[i+1] = Quaternion.FromToRotation(Vector3.forward, hit.normal);
                     break;
                 }
             }
