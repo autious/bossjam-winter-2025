@@ -5829,6 +5829,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitEffects:
   - {fileID: 7188998172200550153, guid: 8ad682512a6480e4cab3a764303270bd, type: 3}
+  - {fileID: 7188998172200550153, guid: 0eea12418f603a047b7080f9b4436657, type: 3}
 --- !u!1 &6839643051324722214
 GameObject:
   m_ObjectHideFlags: 0
