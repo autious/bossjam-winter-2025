@@ -47,6 +47,7 @@ public class QuickPlayerController : NetworkBehaviour
     [SerializeField] Transform gunFirePoint;
     [SerializeField] Transform logicalFirePoint;
     [SerializeField] float gunCooldown;
+    [SerializeField] AudioSource weaponCharge;
     float gunCdTimer;
 
 
@@ -111,7 +112,7 @@ public class QuickPlayerController : NetworkBehaviour
         if (GameManager.Instance != null) {
             if (!HasStateAuthority) {
                 // Online player stuff
-                
+
                 charAnim.SetValues(walk, strafe, 0, true);
                 return;
             }
@@ -144,6 +145,9 @@ public class QuickPlayerController : NetworkBehaviour
         bool jumpInput = Input.GetKeyDown(KeyCode.Space);
         Movement(moveX, moveY, jumpInput);
 
+        if(gunCdTimer-0.5f > 0.0f && gunCdTimer-0.5f < Time.deltaTime) {
+            weaponCharge.Play();
+        }
         gunCdTimer -= Time.deltaTime;
         if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
             gunCdTimer = gunCooldown;

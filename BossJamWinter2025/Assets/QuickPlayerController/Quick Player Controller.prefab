@@ -5319,6 +5319,134 @@ Transform:
   - {fileID: 3376679050128906823}
   m_Father: {fileID: 2996315042204520305}
   m_LocalEulerAnglesHint: {x: -50.171, y: -8.088, z: -92.944}
+--- !u!1 &3432548935392935700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6332362545255070268}
+  - component: {fileID: 8906349018522673222}
+  m_Layer: 3
+  m_Name: WeaponCharge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6332362545255070268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3432548935392935700}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.48437977, y: 0.0077171624, z: -0.0420945, w: 0.8738105}
+  m_LocalPosition: {x: 0.056907613, y: 0.079725064, z: -0.06578327}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2219839779147972206}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &8906349018522673222
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3432548935392935700}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: a715679a18801ab4cb79a426466e6e4f, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5459015146391225970
 GameObject:
   m_ObjectHideFlags: 0
@@ -5829,6 +5957,7 @@ MonoBehaviour:
   gunFirePoint: {fileID: 238733864552373479}
   logicalFirePoint: {fileID: 7043143721482096484}
   gunCooldown: 2.5
+  weaponCharge: {fileID: 8906349018522673222}
   laserPrefab: {fileID: 2129497574987532621, guid: 25caa90010e7f7144bc91888fab3f42b,
     type: 3}
   _walk: 0
@@ -6755,6 +6884,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6398706155269546945}
+    - targetCorrespondingSourceObject: {fileID: 4286314223353644389, guid: 125a913ee0349534f8fcd2954fdc8fc7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6332362545255070268}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4334440945911921785, guid: 125a913ee0349534f8fcd2954fdc8fc7,
         type: 3}
@@ -6819,6 +6952,12 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 1
+--- !u!4 &2219839779147972206 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4286314223353644389, guid: 125a913ee0349534f8fcd2954fdc8fc7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2716366115475798795}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2996315042204520305 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 875796405494822010, guid: 125a913ee0349534f8fcd2954fdc8fc7,
