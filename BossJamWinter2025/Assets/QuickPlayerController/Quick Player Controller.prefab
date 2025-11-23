@@ -5593,6 +5593,7 @@ GameObject:
   - component: {fileID: 628427726174719931}
   - component: {fileID: 9126809501782942859}
   - component: {fileID: 209170056174736318}
+  - component: {fileID: 33957800095114321}
   m_Layer: 6
   m_Name: HitFront
   m_TagString: Untagged
@@ -5686,6 +5687,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &33957800095114321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577183089650833149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10ef3cbf613d36548abc5ba81d7e1e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitEffects:
+  - {fileID: 7188998172200550153, guid: 8ad682512a6480e4cab3a764303270bd, type: 3}
 --- !u!1 &6839643051324722214
 GameObject:
   m_ObjectHideFlags: 0
@@ -6442,6 +6457,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 6839643051324722215}
+  hitVisualEffect: {fileID: 7253612212382618151, guid: ac463f6280e5cff40865907118bc0cc2,
+    type: 3}
+  hitSoundEffect: {fileID: 7188998172200550153, guid: e05e799508c75224aa5a528d6089c452,
+    type: 3}
 --- !u!1 &8607182396415004077
 GameObject:
   m_ObjectHideFlags: 0
@@ -6797,6 +6816,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 6839643051324722215}
+  hitVisualEffect: {fileID: 0}
+  hitSoundEffect: {fileID: 0}
 --- !u!1 &1843519828467074930 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4334440945911921785, guid: 125a913ee0349534f8fcd2954fdc8fc7,
