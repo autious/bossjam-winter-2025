@@ -27,7 +27,7 @@ public class MapInstance : NetworkBehaviour {
     [Networked] public TickTimer currentStateTimer { get; private set; }
 
     [Networked] [Capacity(16)] public NetworkDictionary<PlayerRef, int> kills => default;
-    [Networked] private int killGoal { get; set; } = 5;
+    [Networked] private int killGoal { get; set; } = 10;
 
     public NetworkObject playerPrefab;
 
@@ -155,8 +155,6 @@ public class MapInstance : NetworkBehaviour {
     }
 
     protected virtual void UpdateMidGame() {
-        return; // Just ignore timers and win conditions
-
         var killTargetReached = false;
         foreach ((PlayerRef player, int count) in kills) {
             if (count >= killGoal) {
