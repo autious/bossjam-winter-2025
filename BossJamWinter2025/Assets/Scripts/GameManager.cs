@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour, INetworkRunnerCallbacks {
     public static GameManager Instance { get; private set; }
 
     public NetworkRunner runner;
-    private string roomIdentifier = "default_room";
+    private string roomIdentifier = "Room";
     private string initialPlayerName = "default_player";
 
     public Queue<FeedEntry> feed = new();

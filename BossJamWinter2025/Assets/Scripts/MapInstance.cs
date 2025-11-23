@@ -27,7 +27,7 @@ public class MapInstance : NetworkBehaviour {
     [Networked] public TickTimer currentStateTimer { get; private set; }
 
     [Networked] [Capacity(16)] public NetworkDictionary<PlayerRef, int> kills => default;
-    [Networked] private int killGoal { get; set; } = 10;
+    [Networked] private int killGoal { get; set; } = 20;
 
     public NetworkObject playerPrefab;
 
@@ -59,7 +59,7 @@ public class MapInstance : NetworkBehaviour {
     }
 
     public IEnumerator RespawnCoroutine() {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3);
 
         yield return Runner.SpawnAsync(playerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
         yield return new WaitForSeconds(2);
@@ -70,7 +70,6 @@ public class MapInstance : NetworkBehaviour {
         currentState = GameState.PreGame;
         currentStateTimer = TickTimer.CreateFromSeconds(Runner, 8);
         kills.Clear();
-        killGoal = 2;
 
         Debug.Log("Started PreGame");
     }
@@ -171,7 +170,7 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Ending Game...");
 
             currentState = GameState.PostGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 20);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 4);
         }
     }
 
