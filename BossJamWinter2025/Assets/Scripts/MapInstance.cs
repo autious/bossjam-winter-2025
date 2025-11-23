@@ -27,7 +27,7 @@ public class MapInstance : NetworkBehaviour {
     [Networked] public TickTimer currentStateTimer { get; private set; }
 
     [Networked] [Capacity(16)] public NetworkDictionary<PlayerRef, int> kills => default;
-    [Networked] private int killGoal { get; set; } = 5;
+    [Networked] private int killGoal { get; set; } = 10;
 
     public NetworkObject playerPrefab;
 
@@ -68,7 +68,7 @@ public class MapInstance : NetworkBehaviour {
 
     public void StartRound() {
         currentState = GameState.PreGame;
-        currentStateTimer = TickTimer.CreateFromSeconds(Runner, 4);
+        currentStateTimer = TickTimer.CreateFromSeconds(Runner, 8);
         kills.Clear();
         killGoal = 2;
 
@@ -93,6 +93,11 @@ public class MapInstance : NetworkBehaviour {
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_ReportKill(PlayerRef killedPlayer, RpcInfo info = default) {
+        // Ignore kills that are done outside game time
+        if (currentState != GameState.MidGame) {
+            return;
+        }
+
         bool isLocalPlayerInvolved = killedPlayer == Runner.LocalPlayer || info.Source == Runner.LocalPlayer;
 
         // Gather some data
@@ -148,15 +153,13 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Starting Game...");
 
             currentState = GameState.MidGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 120);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 60 * 5);
             kills.Clear();
             killGoal = 5;
         }
     }
 
     protected virtual void UpdateMidGame() {
-        return; // Just ignore timers and win conditions
-
         var killTargetReached = false;
         foreach ((PlayerRef player, int count) in kills) {
             if (count >= killGoal) {
@@ -169,7 +172,7 @@ public class MapInstance : NetworkBehaviour {
             Debug.Log("Ending Game...");
 
             currentState = GameState.PostGame;
-            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 10);
+            currentStateTimer = TickTimer.CreateFromSeconds(Runner, 20);
         }
     }
 

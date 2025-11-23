@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using EasyButtons;
 using System;
-using WebSocketSharp;
 
 public class BounceRay : MonoBehaviour
 {
