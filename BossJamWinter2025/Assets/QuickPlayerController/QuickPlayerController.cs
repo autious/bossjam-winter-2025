@@ -150,6 +150,7 @@ public class QuickPlayerController : NetworkBehaviour
         if(gunCdTimer-0.5f > 0.0f && gunCdTimer-0.5f < Time.deltaTime) {
             weaponCharge.Play();
         }
+
         gunCdTimer -= Time.deltaTime;
         if (Input.GetMouseButtonDown(0) && gunCdTimer <= 0) {
             gunCdTimer = gunCooldown;
@@ -160,6 +161,7 @@ public class QuickPlayerController : NetworkBehaviour
 
             playerGun.RPC_ReportCosmeticBullet(logicalFirePoint.position + logicalFirePoint.transform.forward * 0.3f, logicalFirePoint.rotation, gunFirePoint.position, bulletColor);
             playerVoice.TryPlayEvent(PlayerVoiceLines.VoiceEvent.OnShotGun);
+            laser.Hide();
         }
 
          // if(Input.GetMouseButtonDown(1)) {
@@ -178,7 +180,9 @@ public class QuickPlayerController : NetworkBehaviour
             // laser.Preview(gunFirePoint.position);
         }
 
-        laser.Preview(gunFirePoint.position, Color.green, Color.red);
+        if(gunCdTimer <= 0.0f) {
+            laser.Preview(gunFirePoint.position, Color.green, Color.red);
+        }
 
         // if(Input.GetMouseButtonUp(1)) {
         //     Destroy(laser.gameObject);

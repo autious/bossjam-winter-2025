@@ -86,6 +86,12 @@ public class BounceRay : MonoBehaviour
         StartCoroutine(ShootCoroutine(cosmetic,true));
     }
 
+    public void Hide()
+    {
+        shotLineRenderer.gameObject.SetActive(false);
+        previewLineRenderer.gameObject.SetActive(false);
+    }
+
     public void Preview(Vector3 gunFirePoint, Color missColor, Color hitColor)
     {
         Recalc();
@@ -242,8 +248,8 @@ public class BounceRay : MonoBehaviour
                     Vector3 out_vector = Vector3.Reflect(ray.direction, hit.normal);
 
                     //Try so extra angles for fun and see if we can find a player.
-                    for(int a = -8; a < 9; a++) {
-                        Vector3 out_vector_candidate = Quaternion.AngleAxis(0.5f*a, Vector3.up) * out_vector;
+                    for(int a = -16; a < 17; a++) {
+                        Vector3 out_vector_candidate = Quaternion.AngleAxis(0.25f*a, Vector3.up) * out_vector;
                         if(RayHitsPlayer(3.0f, new Ray(hit.point + hit.normal * 0.01f + out_vector * 0.01f, out_vector_candidate), new Ray(hit.point, out_vector))) {
                             out_vector = out_vector_candidate;
                             break;
