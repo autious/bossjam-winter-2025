@@ -155,7 +155,6 @@ public class MapInstance : NetworkBehaviour {
             currentState = GameState.MidGame;
             currentStateTimer = TickTimer.CreateFromSeconds(Runner, 60 * 5);
             kills.Clear();
-            killGoal = 5;
         }
     }
 
