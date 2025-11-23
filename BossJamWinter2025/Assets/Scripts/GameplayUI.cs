@@ -78,10 +78,11 @@ public class GameplayUI : MonoBehaviour {
 
         feed.enabled = GameManager.Instance != null;
         if (GameManager.Instance != null) {
-            // Who cares about efficiency, just send it
+            // Who cares about efficiency, just send it (This is for the entire feed)
+            // var entryText = string.Join("\n", GameManager.Instance.feed.Select((x) => x.message));
 
-            var entryText = string.Join("\n", GameManager.Instance.feed.Select((x) => x.message));
-
+            // This is for the last added element
+            var entryText = GameManager.Instance.feed.Select((x) => x.message).LastOrDefault();
             if (string.IsNullOrEmpty(entryText)) {
                 entryText = GameManager.Instance.uiPlayerName.text;
             }
