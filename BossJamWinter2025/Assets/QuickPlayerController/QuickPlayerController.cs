@@ -47,7 +47,7 @@ public class QuickPlayerController : NetworkBehaviour
     [SerializeField] Transform gunFirePoint;
     [SerializeField] Transform logicalFirePoint;
     [SerializeField] float gunCooldown;
-    float gunCdTimer;
+    public float gunCdTimer;
 
 
     [SerializeField] GameObject laserPrefab;
