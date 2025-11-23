@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EasyButtons;
@@ -62,7 +62,6 @@ public class BounceRay : MonoBehaviour
         }
     }
 
-    RaycastHit[] hits = new RaycastHit[16];
 
     [Button("Shoot")]
     private void ShootDebug()
@@ -175,10 +174,31 @@ public class BounceRay : MonoBehaviour
         }
     }
 
+    bool RayHitsPlayer(Ray ray) {
+        RaycastHit[] hits = new RaycastHit[8];
+        int num_hits = Physics.RaycastNonAlloc(ray, hits, 10000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint", "HitConsume"));
+        //int num_hits = Physics.SphereCastNonAlloc(ray, 0.25f, hits, 1000.0f, LayerMask.GetMask("Default", "PlayerWeakpoint"));
+
+        if (num_hits > 0) {
+            RaycastHit hit = hits[0];
+
+            //Get closest hit
+            for(int k = 1; k < num_hits; k++) {
+                if(hits[k].distance < hit.distance) {
+                    hit = hits[k];
+                }
+            }
+
+            return hit.collider.gameObject.layer == 10;
+        }
+        return false;
+    }
+
     [Button("Recalc")]
     public void Recalc()
     {
         Realloc();
+        RaycastHit[] hits = new RaycastHit[16];
         ray_sequence[0] = new Ray(transform.position, transform.forward);
         line_segment[0] = transform.position;
         point_orientation[0] = transform.rotation;
@@ -206,6 +226,15 @@ public class BounceRay : MonoBehaviour
                     // Debug.Log($"Hit {i}: {hit.collider.name} at {hit.point} normal {hit.normal}");
 
                     Vector3 out_vector = Vector3.Reflect(ray.direction, hit.normal);
+
+                    //Try so extra angles for fun and see if we can find a player.
+                    for(int a = -2; a < 3; a++) {
+                        Vector3 out_vector_candidate = Quaternion.AngleAxis(2.0f*a, Vector3.up) * out_vector;
+                        if(RayHitsPlayer(new Ray(hit.point + hit.normal * 0.01f + out_vector * 0.01f, out_vector_candidate))){
+                            out_vector = out_vector_candidate;
+                            break;
+                        }
+                    }
 
                     hit_count = i+1;
                     distances[i+1] = distances[i] + hit.distance;
