@@ -70,7 +70,7 @@ public class QuickPlayerController : NetworkBehaviour
         camThingy.SetActive(HasStateAuthority);
         headModel.SetActive(HasStateAuthority == false);
 
-        var players = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None);
+        var players = FindObjectsByType<QuickPlayerController>(FindObjectsSortMode.None);
         var spawnPoints = FindObjectsByType<SpawnPointPlayer>(FindObjectsSortMode.None); // Imagine caching any of this
 
         // Get some spawn points that are far enough from other players
@@ -81,6 +81,7 @@ public class QuickPlayerController : NetworkBehaviour
             foreach (var player in players) {
                 if (Vector3.Distance(potentialSpawnPoint.transform.position, player.transform.position) < MIN_DISTANCE) {
                     valid = false;
+                    break;
                 }
             }
 
