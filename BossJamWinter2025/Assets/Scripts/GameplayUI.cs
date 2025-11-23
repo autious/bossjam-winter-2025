@@ -35,7 +35,7 @@ public class GameplayUI : MonoBehaviour {
         }
         var player = GameObject.FindObjectsOfType<QuickPlayerController>().FirstOrDefault((x) => x.HasStateAuthority);
 
-        if(player != null && player.gunCdTimer > 0) {
+        if(player != null && player.gunCdTimer > 1) {
 
             currentAngryEmoteTime += Time.deltaTime;
             currentAngryEmoteTime %= cycleAngryEmoteTime;
