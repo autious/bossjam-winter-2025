@@ -86,6 +86,12 @@ public class BounceRay : MonoBehaviour
         StartCoroutine(ShootCoroutine(cosmetic,true));
     }
 
+    public void Hide()
+    {
+        shotLineRenderer.gameObject.SetActive(false);
+        previewLineRenderer.gameObject.SetActive(false);
+    }
+
     public void Preview(Vector3 gunFirePoint, Color missColor, Color hitColor)
     {
         Recalc();
